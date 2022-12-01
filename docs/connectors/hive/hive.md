@@ -20,8 +20,6 @@ The ***BitSail*** hive connector supports reading and writing to hive tables. Th
     - 2.0.0
     - 2.1.0
     - 2.1.1
-    - 2.3.0
-    - 2.3.9
 - 3.0
     - 3.1.0
     - 3.1.2
