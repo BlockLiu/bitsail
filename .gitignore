@@ -17,3 +17,8 @@ output
 */.DS_Store
 .flattened-pom.xml
 */*.flattened-pom.xml
+node_modules/
+docs/.vuepress/.cache/
+docs/.vuepress/.temp/
+docs/.vuepress/dist/
+yarn-error.log
