@@ -22,3 +22,4 @@ docs/.vuepress/.cache/
 docs/.vuepress/.temp/
 docs/.vuepress/dist/
 yarn-error.log
+yarn.lock
