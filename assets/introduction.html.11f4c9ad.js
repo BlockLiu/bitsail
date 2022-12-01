@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-196e0273","path":"/src/zh/connectors/introduction.html","title":"BitSail 连接器","lang":"en-US","frontmatter":{},"excerpt":"","headers":[],"git":{"updatedTime":1669879577000,"contributors":[{"name":"liupeng.96","email":"96pengpeng@gmail.com","commits":1}]},"filePathRelative":"src/zh/connectors/introduction.md"}');export{t as data};

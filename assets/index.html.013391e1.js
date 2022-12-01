@@ -1,0 +1,1 @@
+import{_ as t,o as n,c as o,a as e}from"./app.f58ef234.js";const s={},c=e("p",null,"::: center this is extra content, blabla.",-1),_=e("p",null,"write whatever.",-1),l=e("p",null,"blabla... :::",-1),a=[c,_,l];function r(i,d){return n(),o("div",null,a)}const u=t(s,[["render",r],["__file","index.html.vue"]]);export{u as default};

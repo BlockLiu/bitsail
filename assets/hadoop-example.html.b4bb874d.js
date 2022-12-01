@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-7c98f72e","path":"/zh/connectors/hadoop/hadoop-example.html","title":"Hadoop连接器使用示例","lang":"en-US","frontmatter":{},"excerpt":"","headers":[],"git":{"updatedTime":1669879794000,"contributors":[{"name":"liupeng.96","email":"96pengpeng@gmail.com","commits":3}]},"filePathRelative":"zh/connectors/hadoop/hadoop-example.md"}');export{e as data};
