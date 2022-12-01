@@ -1,1 +1,0 @@
-import{o as n,c as _}from"./app.c0dfdf74.js";const s=(t,e)=>{const c=t.__vccOpts||t;for(const[o,r]of e)c[o]=r;return c},a={};function f(t,e){return n(),_("div")}const m=s(a,[["render",f],["__file","404.html.vue"]]);export{m as default};
