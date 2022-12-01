@@ -1,1 +1,0 @@
-import{_ as e,o as t,c,a as n}from"./app.f58ef234.js";const o={},_=n("p",null,"::: center 我是文案 :::",-1),s=[_];function r(a,l){return t(),c("div",null,s)}const i=e(o,[["render",r],["__file","index.html.vue"]]);export{i as default};

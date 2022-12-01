@@ -1,1 +1,0 @@
-const e=JSON.parse('{"key":"v-ceef7070","path":"/zh/connectors/ftp/ftp-example.html","title":"FTP/SFTP连接器使用示例","lang":"en-US","frontmatter":{},"excerpt":"","headers":[],"git":{"updatedTime":1669879794000,"contributors":[{"name":"liupeng.96","email":"96pengpeng@gmail.com","commits":3}]},"filePathRelative":"zh/connectors/ftp/ftp-example.md"}');export{e as data};
