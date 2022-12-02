@@ -1,0 +1,14 @@
+export const data = JSON.parse("{\"key\":\"v-2bdf5a62\",\"path\":\"/zh/documents/components/format/hive-format_zh.html\",\"title\":\"bitsail-component-format-flink-hive\",\"lang\":\"zh-CN\",\"frontmatter\":{},\"excerpt\":\"\",\"headers\":[{\"level\":2,\"title\":\"如何构造\",\"slug\":\"如何构造\",\"link\":\"#如何构造\",\"children\":[{\"level\":3,\"title\":\"构建示例\",\"slug\":\"构建示例\",\"link\":\"#构建示例\",\"children\":[]}]},{\"level\":2,\"title\":\"如何解析Writable\",\"slug\":\"如何解析writable\",\"link\":\"#如何解析writable\",\"children\":[]},{\"level\":2,\"title\":\"如何转化为Row\",\"slug\":\"如何转化为row\",\"link\":\"#如何转化为row\",\"children\":[]},{\"level\":2,\"title\":\"支持的数据类型\",\"slug\":\"支持的数据类型\",\"link\":\"#支持的数据类型\",\"children\":[]},{\"level\":2,\"title\":\"使用示例\",\"slug\":\"使用示例\",\"link\":\"#使用示例\",\"children\":[]}],\"readingTime\":{\"minutes\":3.8,\"words\":1140},\"filePathRelative\":\"zh/documents/components/format/hive-format_zh.md\"}")
+
+if (import.meta.webpackHot) {
+  import.meta.webpackHot.accept()
+  if (__VUE_HMR_RUNTIME__.updatePageData) {
+    __VUE_HMR_RUNTIME__.updatePageData(data)
+  }
+}
+
+if (import.meta.hot) {
+  import.meta.hot.accept(({ data }) => {
+    __VUE_HMR_RUNTIME__.updatePageData(data)
+  })
+}

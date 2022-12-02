@@ -1,0 +1,14 @@
+export const data = JSON.parse("{\"key\":\"v-619ee867\",\"path\":\"/zh_backup/connectors/Jdbc/jdbc_zh.html\",\"title\":\"Jdbc Connector 介绍\",\"lang\":\"en-US\",\"frontmatter\":{},\"excerpt\":\"\",\"headers\":[{\"level\":2,\"title\":\"支持的数据类型\",\"slug\":\"支持的数据类型\",\"link\":\"#支持的数据类型\",\"children\":[{\"level\":3,\"title\":\"Oracle 支持以下数据类型\",\"slug\":\"oracle-支持以下数据类型\",\"link\":\"#oracle-支持以下数据类型\",\"children\":[]}]},{\"level\":2,\"title\":\"Jdbc Source\",\"slug\":\"jdbc-source\",\"link\":\"#jdbc-source\",\"children\":[{\"level\":3,\"title\":\"主要功能\",\"slug\":\"主要功能\",\"link\":\"#主要功能\",\"children\":[]},{\"level\":3,\"title\":\"主要参数\",\"slug\":\"主要参数\",\"link\":\"#主要参数\",\"children\":[]}]},{\"level\":2,\"title\":\"Jdbc Sink\",\"slug\":\"jdbc-sink\",\"link\":\"#jdbc-sink\",\"children\":[{\"level\":3,\"title\":\"主要功能\",\"slug\":\"主要功能-1\",\"link\":\"#主要功能-1\",\"children\":[]},{\"level\":3,\"title\":\"主要参数\",\"slug\":\"主要参数-1\",\"link\":\"#主要参数-1\",\"children\":[]}]},{\"level\":2,\"title\":\"相关文档\",\"slug\":\"相关文档\",\"link\":\"#相关文档\",\"children\":[]}],\"readingTime\":{\"minutes\":7.59,\"words\":2278},\"filePathRelative\":\"zh_backup/connectors/Jdbc/jdbc_zh.md\"}")
+
+if (import.meta.webpackHot) {
+  import.meta.webpackHot.accept()
+  if (__VUE_HMR_RUNTIME__.updatePageData) {
+    __VUE_HMR_RUNTIME__.updatePageData(data)
+  }
+}
+
+if (import.meta.hot) {
+  import.meta.hot.accept(({ data }) => {
+    __VUE_HMR_RUNTIME__.updatePageData(data)
+  })
+}
