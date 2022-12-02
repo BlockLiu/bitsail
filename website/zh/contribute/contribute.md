@@ -1,6 +1,6 @@
 # 贡献者指引
 
-[English](contributing.md) | 简体中文
+[English](/en/contribute/contribute.md) | 简体中文
 
 BitSail社区欢迎大家的贡献！
 
@@ -19,7 +19,7 @@ BitSail社区欢迎大家的贡献！
 - 如果不是，根据文档自己创建一个新问题[创建Issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/creating-an-issue)
 
 ## 开发环境配置
-跳转到[环境配置](env_setup_zh.md)
+跳转到[环境配置](/zh/documents/docs/start/env_setup.md)
 
 ## 代码风格
 
@@ -33,12 +33,12 @@ BitSail项目使用了[Google Java Style Guide](https://google.github.io/stylegu
 
 在IDE中安装checkstyle插件
 
-![](images/checkstyle_plugin.png)
+![](../../images/checkstyle_plugin.png)
 
 我们为开发者定义了一份checkstyle配置 [tools/maven/checkstyle.xml](https://github.com/bytedance/bitsail/blob/master/tools/maven/checkstyle.xml) 。
 在IDE中进行开发时，可将上述checkstyle配置文件导入项目:
 
-![](images/set_checkstyle.png)
+![](../../images/set_checkstyle.png)
 
 导入完成后，运行指令 `mvn checkstyle:check` 即可检查是否满足checkstyle.
 
@@ -50,7 +50,7 @@ BitSail项目使用了[Google Java Style Guide](https://google.github.io/stylegu
 所有源文件都需要添加许可证头。请添加 [Apache License header](https://www.apache.org/legal/src-headers#headers)
 到您的 IDE 版权设置。完成此步骤后，IDE 将自动将许可证添加到新的源文件。
 
-![](images/license_header.png)
+![](../../images/license_header.png)
 
 ## 开发小技巧
 ### maven依赖强制检查

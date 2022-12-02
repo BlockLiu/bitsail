@@ -20,11 +20,16 @@ export const zhNavbar = navbar([
   {
     text: "用户案例",
     link: "/zh/usercases/case",
-    activeMatch: "^/zh/case",
+    activeMatch: "^/zh/usercases",
   },
   {
     text: "下载",
     link: "/zh/release/release",
     activeMatch: "^/zh/release",
+  },
+  {
+    text: "Github",
+    link: "https://github.com/bytedance/bitsail",
+    activeMatch: "^/zh/github",
   }
 ]);

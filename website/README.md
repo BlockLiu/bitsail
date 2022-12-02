@@ -1,47 +1,45 @@
 ---
 home: true
-title: 首页
+title: HomePage
 heroImage: /bitsail_logo.png
 heroText: BitSail
-tagline: 一款基于分布式架构的高性能数据集成引擎，支持多种异构数据源间的数据同步，目前服务于抖音、今日头条等业务线，每日同步百万级数据。
+tagline: A high-performance data integration engine based on distributed architecture, supporting data synchronization between multiple heterogeneous data sources.
 actions:
-  - text: 快速开始
-    link: /zh/start/env_setup/
+  - text: Quick Start
+    link: /zh/documents/start
     type: primary
-  - text: 开源仓库
+  - text: Github
     link: https://github.com/bytedance/bitsail
     type: primary
 
 # todo: 修改脚注
-footer: 
-  - MIT Licensed | Copyright © 2018-present 修改脚注！sads
-  - <a href="https://github.com/bytedance/bitsail">sads</a>
+footer: 记得修改脚注，加license！！！
 
 
 features:
-  - title: 异构数据源同步
+  - title: Data Sync
     icon: api
-    details: 支持多种异构数据源间高性能、高可靠的海量数据同步，并支持不同数据源类型之间的转换
+    details: Support high-performance and reliable mass data synchronization between multiple heterogeneous data sources, and support conversion between different data source types.
 
-  - title: 湖仓一体
+  - title: Data lakehouse
     icon: discover
-    details: 支持流批一体、湖仓一体架构，用一套框架覆盖几乎所有数据同步场景
+    details: Support streaming batch integration and lake warehouse integration architecture, and use one unified framework to cover almost all data synchronization scenarios.
 
-  - title: 分布式架构
+  - title: Distributed
     icon: condition
-    details: 基于Hadoop生态，支持分布式水平扩展，通过一套架构解决批式、流式、增量场景下的数据同步
+    details: Based on Hadoop ecology, BitSail supports distributed horizontal expansion, and solves data synchronization in batch, stream, and incremental scenarios.
 
-  - title: DDL自动同步
+  - title: Schema Sync
     icon: update
-    details: 支持上下游数据源之间灵活的表结构同步，包括表创建和列级别的增、删、改
+    details: Support flexible table structure synchronization between upstream and downstream data sources, including creating table and column level addition, deletion and modification.
 
-  - title: 脏数据收集
+  - title: Dirty Collector
     icon: bitbucket
-    details: 支持脏数据收集展示，并支持扩展脏数据存储方式
+    details: Support collecting and displaying dirty data, and support expanding more kinds of data storage for storing dirty data.
   
-  - title: 高效开发
+  - title: Develop
     icon: code
-    details: 独立于引擎的读写接口，开发成本低
+    details: The engine independent read-write interface supports efficient development.
 
 ---
 

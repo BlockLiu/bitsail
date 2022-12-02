@@ -6,7 +6,7 @@ heroText: BitSail
 tagline: 一款基于分布式架构的高性能数据集成引擎，支持多种异构数据源间的数据同步，目前服务于抖音、今日头条等业务线，每日同步百万级数据。
 actions:
   - text: 快速开始
-    link: /zh/start/env_setup/
+    link: /zh/documents/start
     type: primary
   - text: 开源仓库
     link: https://github.com/bytedance/bitsail

@@ -1,7 +1,10 @@
 import { sidebar } from "vuepress-theme-hope";
 
 export const enSidebar = sidebar({
-  "/start": "structure",
-  "/components": "structure",
-  "/connectors": "structure",
+  "/en/contribute": "structure",
+  "/en/documents": "structure",
+  "/en/release": "structure",
+  "/en/start": "structure",
+  "/en/team": "structure",
+  "/en/usercases": "structure"
 });
