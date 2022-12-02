@@ -65,7 +65,7 @@ BitSail目前已被广泛使用,并支持数百万亿的大流量场景。同时
 - 任务状态实时监控
 
 ## BitSail架构
-![](../images/bitsail_arch.png)
+![](../../images/bitsail_arch.png)
 
  ```
  Source[Input Sources] -> Framework[Data Transmission] -> Sink[Output Sinks]

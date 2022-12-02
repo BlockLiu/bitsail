@@ -6,7 +6,7 @@ heroText: BitSail
 tagline: A high-performance data integration engine based on distributed architecture, supporting data synchronization between multiple heterogeneous data sources.
 actions:
   - text: Quick Start
-    link: /zh/documents/start
+    link: /en/documents/start
     type: primary
   - text: Github
     link: https://github.com/bytedance/bitsail
