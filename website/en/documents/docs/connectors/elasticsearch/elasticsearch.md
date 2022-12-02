@@ -1,16 +1,16 @@
-# Elasticsearch连接器
+# Elasticsearch connector
 
-上级文档: [connectors](../../../connectors.md)
+Parent document: [connectors](../../../connectors.md)
 
 
-## 主要功能
+## Main function
 
-Elasticsearch连接器可用于流、批场景，提供`At-Least-Once`语义地写入elasticsearch 地能力，并提供灵活地写入请求构建。
+The Elasticsearch connector can be used in stream and batch scenarios, providing the ability to write elasticsearch in `'At Least Once'` mode, and providing flexible write request construction.
 
-## 支持的版本信息
- - 支持Elasticsearch 7.X
+## Supported version
+- Support Elasticsearch 7.X
 
-## 依赖引入
+## Maven depedency
 
 ```xml
 <dependency>
@@ -20,88 +20,89 @@ Elasticsearch连接器可用于流、批场景，提供`At-Least-Once`语义地�
 </dependency>
 ```
 
-## 支持的数据类型
+## Supported data types
 
-Elasticsearch连接器支持基本的字段类型:
+Basic data types supported by Elasticsearch connectors:
 
- - 字符串类型:
+- String type:
     - string
     - text
     - keyword
- - 整数类型:
+- Integer type:
     - long
     - integer
     - short
     - byte
- - 浮点类型:
+- Float type:
     - double
     - float
     - half_float
     - scaled_float
- - 布尔类型
+- Bool type:
     - boolean
- - 二进制类型
+- Binary type:
     - binary
- - 日期类型
+- Date type:
     - date
 
-## 主要参数
+## Parameters
 
-用户可通过在任务配置文件的 `job.writer` 块中添加如下参数。
-
-### 必需参数
-
-| 参数名称     | 参数默认值 | 参数枚举值 | 参数含义                                                                                                    |
-|:---------|:------|:------|:--------------------------------------------------------------------------------------------------------|
-| class    | -     |       | Elasticsearch连接器类名，只能为`com.bytedance.bitsail.connector.elasticsearch.sink.ElasticsearchSink` |
-| es_hosts | -     |       | Elasticsearch集群接受restful请求的地址列表                                                                         |
-| es_index | -     |       | 要写入的elasticsearch索引                                                                                     |
-| columns  | -     |       | 数据字段名称及类型                                                                                               |
+Users can add parameters to `job.writer` block in task configuration files.
 
 
-### 可选参数
+### Necessary parameters
 
-#### 通用可选参数
-| 参数名称                   | 参数默认值 | 参数枚举值 | 参数含义 |
-|:-----------------------|:------|:------|:-----|
-| writer_parallelism_num |       |       | 写并发数 |
-
-#### Restful请求参数
-| 参数名称                          | 参数默认值 | 参数枚举值 | 参数含义                      |
-|:------------------------------|:------|:------|:--------------------------|
-| request_path_prefix           | -     |       | http客户端发起请求时使用的路径前缀       |
-| connection_request_timeout_ms | 10000 |       | http连接管理器请求连接时使用的超时时间（毫秒） |
-| connection_timeout_ms         | 10000 |       | http连接建立超时时间（毫秒）          |
-| socket_timeout_ms             | 60000 |       | http连接的套接字超时时间（毫秒）        |
-
-#### Bulk操作参数
-
-| 参数名称                         | 参数默认值       | 参数枚举值                           | 参数含义                                                                                   |
-|:-----------------------------|:------------|:--------------------------------|:---------------------------------------------------------------------------------------|
-| bulk_flush_max_actions       | 300         |                                 | request数量到达多少时，执行一次bulk操作                                                              |
-| bulk_flush_max_size_mb       | 10          |                                 | 请求数据大小（单位MB）到达多少时，执行一次bulk操作                                                           |
-| bulk_flush_interval_ms       | 10000       |                                 | 每隔多久执行一次bulk操作（单位ms）                                                                   |
-| bulk_backoff_policy          | EXPONENTIAL | CONSTANT<br>EXPONENTIAL<br>NONE | bulk操作失败时的重试策略:<br>1. `CONSTANT`: 固定延迟重试<br>2. `EXPONENTAIL`: 指数回退重试<br>3. `NONE`: 不重试 |
-| bulk_backoff_delay_ms        | 100         |                                 | bulk操作的失败重试延迟，单位ms                                                                     |
-| bulk_backoff_max_retry_count | 5           |                                 | bulk操作的失败最大重试次数                                                                        |
-
-#### ActionRequest构建参数
-
-| 参数名称                     | 参数默认值   | 参数枚举值                                                   | 参数含义                                                                          |
-|:-------------------------|:--------|:--------------------------------------------------------|:------------------------------------------------------------------------------|
-| es_operation_type        | "index" | "index"<br>"create"<br>"update"<br>"upsert"<br>"delete" | 决定创建的ActionRequest类型                                                          |
-| es_dynamic_index_field   | -       |                                                         | 从源数据的该字段获取这条数据插入的索引名                                                          |
-| es_operation_type_field  | -       |                                                         | 从源数据的该字段获取这条数据的ActionRequest类型                                                |
-| es_version_field         | -       |                                                         | 从源数据的该字段获取这条数据的版本信息                                                           |
-| es_id_fields             | ""      |                                                         | 从源数据的该字段获取文档id。格式为 `','` 分隔的下标字符串，例如: `"1,2"`                                 |
-| doc_exclude_fields       | ""      |                                                         | 在创建文档时，忽略这些下标所在的字段。格式为 `','` 分隔的下标字符串，例如: `"1,2"`                             |
-| ignore_blank_value       | false   |                                                         | 在创建文档时，是否忽略源数据中的值为空的字段                                                        |
-| flatten_map              | false   |                                                         | 在创建文档时，是否将数据源中的Map类型数据展开放入文档                                                  |
-| id_delimiter             | `#`     |                                                         | 在将多个字段合并成一个文档id时使用的分隔符                                                        |
-| json_serializer_features | -       |                                                         | 在构建json字符串时使用的Json特性。格式为 `','` 分隔的字符串，例如: `"QuoteFieldNames,UseSingleQuotes"` |
+| Param name | Default value | Optional value | Description                                                                                                             |
+|:-----------|:--------------|:---------------|:------------------------------------------------------------------------------------------------------------------------|
+| class      | -             |                | Class name of Elasticsearch connector，`com.bytedance.bitsail.connector.elasticsearch.sink.ElasticsearchSink` |
+| es_hosts   | -             |                | Address list for Elasticsearch handling REST requests                                                                   |
+| es_index   | -             |                | Elasticsearch index                                                                                                     |
+| columns    | -             |                | Describing fields' names and types                                                                                      |
 
 
-## 相关文档
+### Optional parameters
 
-配置示例文档[Example](./elasticsearch-example.md)
+#### General optional parameters
+| Param name             | Default value | Optional value | Description        |
+|:-----------------------|:--------------|:---------------|:-------------------|
+| writer_parallelism_num |               |                | writer parallelism |
+
+#### Parameters for construct REST request
+| Param name                    | Default value | Optional value | Description                                                               |
+|:------------------------------|:--------------|:---------------|:--------------------------------------------------------------------------|
+| request_path_prefix           | -             |                | The path prefix used by the http client when making a request             |
+| connection_request_timeout_ms | 10000         |                | Timeout (ms) used by http connection manager when requesting a connection |
+| connection_timeout_ms         | 10000         |                | Http connection establishment timeout (ms)                                |
+| socket_timeout_ms             | 60000         |                | Socket timeout for http connection (ms)                                   |
+
+#### Parameters for bulk request
+
+| Param name                   | Default value | Optional value                  | Description                                                                                                                                       |
+|:-----------------------------|:--------------|:--------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------|
+| bulk_flush_max_actions       | 300           |                                 | When the number of requests reaches, execute a bulk operation                                                                                     |
+| bulk_flush_max_size_mb       | 10            |                                 | When the request data size (in MB) reaches, execute a bulk operation                                                                              |
+| bulk_flush_interval_ms       | 10000         |                                 | How often to execute bulk operation (unit: ms)                                                                                                    |
+| bulk_backoff_policy          | EXPONENTIAL   | CONSTANT<br>EXPONENTIAL<br>NONE | Backoff policy when bulk operation fails:<br>1. `CONSTANT`: fixed delay backoff<br>2. `EXPONENTAIL`: exponential backoff<br>3. `NONE`: no backoff |
+| bulk_backoff_delay_ms        | 100           |                                 | Failure retry delay (ms) of bulk operation                                                                                                        |
+| bulk_backoff_max_retry_count | 5             |                                 | The maximum number of failed retries for bulk operations                                                                                          |
+
+#### Parameters for building ActionRequests
+
+| Param name               | Default value | Optional value                                          | Description                                                                                                                           |
+|:-------------------------|:--------------|:--------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------|
+| es_operation_type        | "index"       | "index"<br>"create"<br>"update"<br>"upsert"<br>"delete" | Type of ActionRequest                                                                                                                 |
+| es_dynamic_index_field   | -             |                                                         | Get the index name of this data to insert from this field                                                                             |
+| es_operation_type_field  | -             |                                                         | Get the ActionRequest type of this data from this field                                                                               |
+| es_version_field         | -             |                                                         | Get the version information of this data from this field                                                                              |
+| es_id_fields             | ""            |                                                         | Get the document ID from this field.<br>The format is `','` separated string, <i>e.g.</i> `"1,2"`                                     |
+| doc_exclude_fields       | ""            |                                                         | When creating a document, ignore these fields. The format is `','` separated string, for example: `"1,2"`                             |
+| ignore_blank_value       | false         |                                                         | Whether to ignore fields with null values when creating documents                                                                     |
+| flatten_map              | false         |                                                         | Whether to expand the `Map` type data into the document when creating the document                                                    |
+| id_delimiter             | `#`           |                                                         | The separator used when merging multiple fields into one document id                                                                  |
+| json_serializer_features | -             |                                                         | Json features used when building json strings. The format is `','` separated string, for example: `"QuoteFieldNames,UseSingleQuotes"` |
+
+
+## Related document
+
+Configuration examples: [elasticsearch-connector-example](./elasticsearch-example.md)
 

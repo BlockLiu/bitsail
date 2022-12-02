@@ -1,12 +1,12 @@
-# Hbase 连接器示例
+# Hbase connector examples
 
 -----
 
-父目录: [HBase连接器](./hbase.md)
+Parent document: [HBase connector](./hbase.md)
 
-## 读写的HBase配置示例
+## HBase configuration
 
-- 在本地使用docker启动一个HBase集群，则默认配置为：
+- Using docker to start an HBase cluster in local, then the default configuration used by it is:
 ```json
 {
   "hbase.zookeeper.quorum":"127.0.0.1",
@@ -14,13 +14,13 @@
 }
 ```
 
-- 创建一张名为`test_table`的表，有三个column family:
+- Create a table `test_table` with three column families:
 
 ```shell
 create 'test_table', 'cf1', 'cf2', 'cf3'
 ```
 
-## 读连接器示例
+## Reader Example
 
 ```json
 {
@@ -70,7 +70,7 @@ create 'test_table', 'cf1', 'cf2', 'cf3'
 ```
 
 
-## 写连接器示例
+## Writer Example
 
 ```json
 {

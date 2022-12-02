@@ -1,15 +1,16 @@
-# 飞书表格连接器
+# LarkSheet connector
 
-上级文档: [connectors](../../../connectors.md)
+Parent document: [connectors](../../../connectors.md)
 
-***Bitsail***飞书表格连接器可用于支持读取飞书表格，主要功能如下:
+The ***Bitsail*** LarkSheet connector supports reading lark sheets.
+The main function points are as follows:
 
- - 支持批式一次读取多张飞书表格
- - 支持token和 [application](https://open.feishu.cn/document/ukTMukTMukTM/uYTM5UjL2ETO14iNxkTN/terminology?lang=en-US) 两种鉴权方式
- - 支持读取表格中的部分列
+ - Support batch read from single or multiple lark sheets at once.
+ - Support authentication by static token and [application](https://open.feishu.cn/document/ukTMukTMukTM/uYTM5UjL2ETO14iNxkTN/terminology?lang=en-US).
+ - Support read a portion of columns from sheets.
 
 
-## 依赖引入
+## Maven dependency
 
 ```xml
 <dependency>
@@ -19,16 +20,15 @@
 </dependency>
 ```
 
-### 飞书表格读取
+### LarkSheet reader
 
-### 支持数据类型
+### Supported data types
 
-飞书表格连接器以 `string` 格式读取所有数据。
+Bitsail LarkSheet reader processes all data as string.
 
+### Parameters
 
-### 参数
-
-读连接器参数在`job.reader`中配置，实际使用时请注意路径前缀。示例:
+The following mentioned parameters should be added to `job.reader` block when using, for example:
 
 ```json
 {
@@ -51,34 +51,33 @@
 }
 ```
 
-#### 必需参数
+#### Necessary parameters
 
-| 参数名称                  | 是否必须 | 参数枚举值 | 参数描述                                                                                                    |
+| Param name                   | Required | Optional value | Description                                                                                                    |
 |:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
-| class                        | 是      |                | 飞书表格读连接器名, `com.bytedance.bitsail.connector.legacy.larksheet.source.LarkSheetInputFormat` |
-|sheet_urls | 是 |  | 要读取的飞书表格列表。多个列表链接用英文逗号分隔| 
-| columns | 是 | | 描述字段名称和字段类型。字段名称与飞书表格中的header相关（header即为第一行）。|
+| class                        | Yes      |                | LarkSheet reader class name, `com.bytedance.bitsail.connector.legacy.larksheet.source.LarkSheetInputFormat` |
+|sheet_urls | Yes |  | A list of sheet to read. Multi sheets urls are separated by comma. | 
+| columns | Yes | | Describing fields' names and types.|
 
-下面的参数用于鉴权，用户至少需要设置 (`sheet_token`) 或者 (`app_id` and `app_secret`)其中一个。
-
+The following parameters are for authentication, you have to set (`sheet_token`) or (`app_id` and `app_secret`) in your configuration.
 
 <table>
     <tr>
-        <th>参数名称</th>
-        <th>是否必须</th>
-        <th>参数枚举值</th>
-        <th>参数描述</th>
+        <th>Param name</th>
+        <th>Required</th>
+        <th>Optional value</th>
+        <th>Description</th>
     </tr>
     <tr>
         <td>sheet_token</td>
-        <td rowspan="3">至少设置下述一项:<br/>1. `sheet_token`<br/>2. `app_id` and `app_secret`</td>
+        <td rowspan="3">At least set one:<br/>1. `sheet_token`<br/>2. `app_id` and `app_secret`</td>
         <td></td>
-        <td>用于<a href="https://open.feishu.cn/document/ukTMukTMukTM/ugTMzUjL4EzM14COxMTN">飞书 open api</a>鉴权的token.</td>
+        <td>Token for get permission to visit <a href="https://open.feishu.cn/document/ukTMukTMukTM/ugTMzUjL4EzM14COxMTN">feishu open api</a>.</td>
     </tr>
     <tr>
         <td>app_id</td>
         <td></td>
-        <td rowspan="2">使用`app_id` 和 `app_secret` 来生成用于<a href="https://open.feishu.cn/document/ukTMukTMukTM/ugTMzUjL4EzM14COxMTN">飞书 open api</a>鉴权的token.</td>
+        <td rowspan="2">Use `app_id` and `app_secret` to generate token for visiting <a href="https://open.feishu.cn/document/ukTMukTMukTM/ugTMzUjL4EzM14COxMTN">feishu open api</a>.</td>
     </tr>
     <tr>
         <td>app_secret</td>
@@ -86,18 +85,17 @@
     </tr>
 </table>
 
-注意，`sheet_token`可能在任务运行中过期。
-如果使用`app_id` 和 `app_secret`，会主动刷新过期token。
+Note that if you use `sheet_token`, it may expire when the job runs.
+If you use `app_id` and `app_secret`, the token will be refreshed if it expires.
 
+#### Optional parameters
 
-#### 可选参数
+| Param name             | Required | Optional value | Description                                                           |
+|:-----------------------|:---------|:---------------|:----------------------------------------------------------------------|
+| reader_parallelism_num | No       |                | Read parallelism num                                                  |
+| batch_size | No | | Number of lines extracted once.|
+|skip_nums| no | | A list of numbers indicating how many lines should be skipped in each sheet. |
 
-| 参数名称                  | 是否必须 | 参数枚举值 | 参数描述                                                                                                    |
-|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
-| reader_parallelism_num | 否       |                | 读并发                                               |
-| batch_size | 否 | | 从open api一次拉取的数据行数|
-|skip_nums| 否 | | 对于每个表格可指定跳过开头的行数。用list表示|
+## Related document
 
-## 相关文档
-
-配置示例文档: [larksheet-connector-example](./larksheet-example.md)
+Configuration examples: [larksheet-connector-example](./larksheet-example.md)

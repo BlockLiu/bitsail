@@ -1,14 +1,14 @@
-# Jdbc Connector 介绍
+# Jdbc Connector
 
-上级文档: [connectors](../../../connectors.md)
+Parent document: [connectors](../../../connectors.md)
 
-Jdbc Connector 通过 JDBC 直连数据库，通过批式的方式，将数据导入到其他存储或者将其他存储的数据导入到数据库中。JDBC connectors 读取 slaves 以最小化对数据库的影响。
+The Jdbc Connector directly connects to the database through JDBC, and imports data into other storages or imports other stored data into the database in a batch manner. JDBC connectors internally read from slaves to minimize the impact on DB.
 
-目前支持读取和写入 MySQL、Oracle、PgSQL、SqlServer 四种数据源。
+Currently, supports reading and writing three kinds of data sources including MySQL, Oracle, PgSQL, SqlServer.
 
-## 支持的数据类型
+## Supported data types
 
-MySQL 支持以下数据类型
+### Supported by MySQL
 
 * bit
 * tinyint
@@ -57,7 +57,7 @@ MySQL 支持以下数据类型
 * multipolygon
 * set
 
-### Oracle 支持以下数据类型
+### Supported by Oracle
 * char
 * varchar
 * interval day
@@ -100,7 +100,7 @@ MySQL 支持以下数据类型
 * binary_float
 * binary_double
 
-PgSQL 支持以下数据类型
+### Supported by PgSQL 
 
 * char
 * bpchar
@@ -162,7 +162,7 @@ PgSQL 支持以下数据类型
 * _oid
 * pg_node_tree
 
-SqlServer 支持以下数据类型：
+### Supported by SqlServer
 
 * char
 * varchar
@@ -199,146 +199,150 @@ SqlServer 支持以下数据类型：
 
 ## Jdbc Source
 
-> 在使用MySQL相关功能时，需要再连接参数中增加`permitMysqlScheme`选项。
+> Please add property `permitMysqlScheme in connection url when use MySQL.
 
-### 主要功能
+### Main function
 
-* 支持多种分片算法
-* 支持分库分表库的读取
-* 支持表同步和 SQL 同步
-* 支持过滤语句
+ - Supports multiple sharding algorithms
+ - Support the reading of sub-database and sub-table database
+ - Support table synchronization and SQL synchronization
+ - Support filter statement
 
-### 主要参数
+### Parameters
 
-通用参数
+#### General parameters
 
-| 参数名称  | 参数默认值 | 参数是否必须 | 参数类型           | 建议值 or 示例值                                                            | 参数含义                                    |
-|---------|-------|--------|--------------------------|---------------------------------------------------------------------------|-------------------------------------------|
-| class   | -     | 是      | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.JDBCInputFormat       | Mysql 读取 connector class 名称             |
-| class   | -     | 是      | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.OracleInputFormat     | Oracle 读取 connector class 名称            |
-| class   | -     | 是      | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.PostgresqlInputFormat | Pgsql 读取 connector class 名称             |
-| class   | -     | 是      | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.SqlServerInputFormat  | SqlServer 读取 connector class 名称         |
-| columns | -     | 是      | list<map<string,string>> | "[ { "name":"id", "type":"int" }, { "name":"name", "type":"varchar" } ]  | Jdbc 读取的列信息。需要和writer的指定的columns数量保持一致。 |
+| Param name | Default value | Required | Parameter type           | Recommended value / Example value                                        | Description                                                                                                       |
+|------------|---------------|----------|--------------------------|--------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| class      | -             | Yes      | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.JDBCInputFormat       | Reader class name for mysql                                                                                       |
+| class      | -             | Yes      | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.OracleInputFormat     | Reader class name for Oracle                                                                                      |
+| class      | -             | Yes      | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.PostgresqlInputFormat | Reader class name for Pgsql                                                                                       |
+| class      | -             | Yes      | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.SqlServerInputFormat  | Reader class name for  SqlServer                                                                                  |
+| columns    | -             | Yes      | list<map<string,string>> | "[ { "name":"id", "type":"int" }, { "name":"name", "type":"varchar" } ]  | Describing fields' names and types. It needs to be consistent with the number of columns specified by the writer. |
 
-数据库连接配置
+#### Database connection configuration
 
-| 参数名称                  | 参数默认值 | 参数是否必须 | 参数类型   | 建议值 or 示例值                                                                                                                                                                                                                                                                               | 参数含义               |
-|-----------------------|-------|--------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|
-| user_name             | -     | 是      | string | abc                                                                                                                                                                                                                                                                                      | Jdbc 连接用户名         |
-| password              | -     | 是      | string | password                                                                                                                                                                                                                                                                                 | Jdbc 连接密码          |
-| query_timeout_seconds | 300   | 否      | int    | 300                                                                                                                                                                                                                                                                                      | 连接 jdbc timeout 时间 |
-| query_retry_times     | 3     | 否      | int    | 3                                                                                                                                                                                                                                                                                        | Jdbc 重试次数          |
-| connections           | -     | 是      |        | [ { "slaves": [ {"db_url": "jdbc:mysql://address=(protocol=tcp)(host=192.168.1.202)(port=3306)/test?permitMysqlScheme&rewriteBatchedStatements=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&jdbcCompliantTruncation=false"} ]} ] | 连接 Jdbc 的信息        |
+| Param name            | Default value | Required | Parameter type | Recommended value / Example value                                                                                                                                                                                                                                                        | Description                    |
+|-----------------------|---------------|----------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
+| user_name             | -             | Yes      | string         | abc                                                                                                                                                                                                                                                                                      | Jdbc username                  |
+| password              | -             | Yes      | string         | password                                                                                                                                                                                                                                                                                 | Jdbc password                  |
+| query_timeout_seconds | 300           | No       | int            | 300                                                                                                                                                                                                                                                                                      | Jdbc connection timeout (s)    |
+| query_retry_times     | 3             | No       | int            | 3                                                                                                                                                                                                                                                                                        | Max retry times for Jdbc query |
+| connections           | -             | Yes      |                | [ { "slaves": [ {"db_url": "jdbc:mysql://address=(protocol=tcp)(host=192.168.1.202)(port=3306)/test?permitMysqlScheme&rewriteBatchedStatements=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&jdbcCompliantTruncation=false"} ]} ] | Jdbc connection urls           |
 
-表同步配置参数
+#### Table synchronization configuration parameters
 
-| 参数名称               | 参数默认值    | 参数是否必须 | 参数类型   | 建议值 or 示例值                   | 参数含义                                                                                                        |
-|--------------------|----------|--------|--------|------------------------------|-------------------------------------------------------------------------------------------------------------|
-| db_name            | -        | 是      | string | db                           | Jdbc 连接db 名                                                                                                 |
-| table_schema       | -        | 否      | string | schema                       | Jdbc 连接Schema 名称，通常只用于 PgSql                                                                                |
-| table_name         | -        | 表同步必须  | string | table                        | 同步的表名                                                                                                       |
-| split_pk           | -        | 表同步必须  | string | id                           | 分片使用的主键                                                                                                     |
-| split_pk_jdbc_type | int      | 否      | string | Int/String                   | 分片键字段类型，支持数字类型和字符串类型                                                                                        |
-| shard_split_mode   | accurate | 否      | string | quick, accurate, parallelism | 分片方式，accurate 会确保每次只拉取 reader_fetch_size 条数据，分片比较均匀，担心分片会比较慢；parallelism 将所有数据分片按照并发数量进行分片，分片会比较快，但是可能分片不均匀 |
-| reader_fetch_size  | 10000    | 否      | int    | 10000                        | 每次拉取数据条数                                                                                                    |
 
-SQL 同步配置参数
+| Param name         | Default value | Required                             | Parameter type | Recommended value / Example value | Description                                                                                                                                                                                                                           |
+|--------------------|---------------|------------------------------------------|----------------|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| db_name            | -             | Yes                                      | string         | db                                | Jdbc connection database name                                                                                                                                                                                                         |
+| table_schema       | -             | No                                       | string         | schema                            | Jdbc connection schema name, usually only used for PgSql                                                                                                                                                                              |
+| table_name         | -             | Necessary if using table synchronization | string         | table                             | Table to read                                                                                                                                                                                                                         |
+| split_pk           | -             | Necessary if using table synchronization | string         | id                                | The primary key used by the shard                                                                                                                                                                                                     |
+| split_pk_jdbc_type | int           | No                                       | string         | Int/String                        | Shard key field type, supports numeric and string types                                                                                                                                                                               |
+| shard_split_mode   | accurate      | No                                       | string         | quick, accurate, parallelism      | Splitting mode<br>accurate: ensure that only `reader_fetch_size` if pulled from table in each request.<br>parallelism: Splitting all data according to the reader parallelism num. The splitting will be fast, but may be nonuniform. |                |
+| reader_fetch_size  | 10000         | No                                       | int            | 10000                             | Number of data pulled each time                                                                                                                                                                                                       |
 
-| 参数名称           | 参数默认值 | 参数是否必须   | 参数类型   | 建议值 or 示例值                              | 参数含义       |
-|----------------|-------|----------|--------|-----------------------------------------|------------|
-| customized_sql | -     | SQL 同步必须 | string | Select id,name from xx.xx where id > 10 | 自定义拉取SQL语句 |
+#### SQL Synchronization Configuration Parameters
 
-其他配置
+| Param name     | Default value | Required                               | Parameter type | Recommended value / Example value       | Description                                      |
+|----------------|---------------|----------------------------------------|----------------|-----------------------------------------|--------------------------------------------------|
+| customized_sql | -             | Necessary if using SQL Synchronization | string         | Select id,name from xx.xx where id > 10 | Custom SQL Statement for pulling data from table |
 
-| 参数名称   | 参数默认值 | 参数是否必须 | 参数类型   | 建议值 or 示例值 | 参数含义      |
-|--------|-------|--------|--------|------------|-----------|
-| filter | -     | 否      | string | id>100     | 读取数据时过滤信息，会通过 where 语句放置在查询语句后 |
+#### Other parameters
+
+| Param name | Default value | Required | Parameter type | Recommended value / Example value | Description                                                                                               |
+|------------|---------------|----------|----------------|-----------------------------------|-----------------------------------------------------------------------------------------------------------|
+| filter     | -             | No       | string         | id>100                            | Filter conditions when pulling data. Will be placed after the query statement through the where statement | |
+
+----
 
 ## Jdbc Sink
 
-> 在使用MySQL相关功能时，需要再连接参数中增加`permitMysqlScheme`选项。
+> Please add property `permitMysqlScheme in connection url when use MySQL.
 
-### 主要功能
+### Main function
 
-* 支持 TTL 清理，在执行导入任务前会按照用户配置的TTL参数删除过期数据，默认TTL为0，即数据永久有效。
-* 支持多种写入模式：清除式写入模式和覆盖式写入模式
-  * 清除式写入: 需要有时间分区字段，写入时，若时间分区已存在，清除已有时间分区数据，再进行写入
-  * 覆盖式写入: 不需要时间分区字段，写入时，不清除数据，按照唯一键upsert，用新的数据覆盖旧数据。当写入出现duplicate key的时候，会进行on duplicate key update操作，来更新字段。另外注意分库分表不支持更新分片建，需要配置job.writer.shard_key参数，value为分片建，多个分片建以逗号分隔
+ - Supports TTL. 
+    - Before executing the import task, expired data will be deleted according to the TTL parameter configured by the user. 
+    - The default TTL is 0, that is, the data is permanently valid.
+ - Supports multiple write modes: <b>clear</b> write mode and <b>overwrite</b> write mode
+    - Clear write: A time partition field is required. When writing, if the time partition already exists, clear the existing time partition data, and then write.
+    - Overwrite write: No time partition field is required. When writing, the data is not cleared. According to the unique key upsert, the old data is overwritten with the new data. When a duplicate key appears in the write, the on duplicate key update operation will be performed to update the field. In addition, note that sharding and sharding do not support updating shards. You need to configure the `job.writer.shard_key` parameter. The value is sharding. Multiple shards are separated by `','`.
 
-### 主要参数
+### Parameters
 
-通用参数
+#### General parameters
 
-| 参数名称  | 参数默认值 | 参数是否必须 | 参数类型            | 建议值 or 示例值                                                            | 参数含义                                    |
-|---------|-------|--------|--------------------------|---------------------------------------------------------------------------|--------------------------------------------|
-| class   | -     | 是      | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.JDBCOutputFormat       | Mysql 写入 connector class 名称             |
-| class   | -     | 是      | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.OracleOutputFormat     | Oracle 写入 connector class 名称            |
-| class   | -     | 是      | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.PostgresqlOutputFormat | Pgsql 写入 connector class 名称             |
-| class   | -     | 是      | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.SqlServerOutputFormat  | SqlServer 写入 connector class 名称         |
-| columns | -     | 是      | list<map<string,string>> | "[ { "name":"id", "type":"int" }, { "name":"name", "type":"varchar" } ]   | Jdbc 写入的列信息。需要和reader的指定的columns数量保持一致。 |
+| Param name | Default value | Is necessary | Parameter type           | Recommended value / Example value                                         | Description                                                                                                       |
+|------------|---------------|--------------|--------------------------|---------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| class      | -             | Yes          | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.JDBCOutputFormat       | Writer class name for mysql                                                                                       |
+| class      | -             | Yes          | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.OracleOutputFormat     | Writer class name for Oracle                                                                                      |
+| class      | -             | Yes          | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.PostgresqlOutputFormat | Writer class name for Pgsql                                                                                       |
+| class      | -             | Yes          | string                   | com.bytedance.bitsail.connector.legacy.jdbc.source.SqlServerOutputFormat  | Writer class name for SqlServer                                                                                   |
+| columns    | -             | Yes          | list<map<string,string>> | "[ { "name":"id", "type":"int" }, { "name":"name", "type":"varchar" } ]   | Describing fields' names and types. It needs to be consistent with the number of columns specified by the reader. |
 
-数据库连接配置
+#### Database connection configuration
 
-| 参数名称         | 参数默认值                             | 参数是否必须 | 参数类型   | 建议值 or 示例值                                                                                                                                                                                                                                            | 参数含义                         |
-|--------------|-----------------------------------|--------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------|
-| user_name    | -                                 | 是      | string | abc                                                                                                                                                                                                                                                   | Jdbc 连接用户名                   |
-| password     | -                                 | 是      | string | password                                                                                                                                                                                                                                              | Jdbc 连接密码                    |
-| connections  | -                                 | 是      |        | [ { "db_url": "jdbc:mysql://address=(protocol=tcp)(host=192.168.1.202)(port=3306)/test?rewriteBatchedStatements=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&jdbcCompliantTruncation=false" } ] | 连接 Jdbc 的信息                  |
-| db_name      | -                                 | 是      | string | db                                                                                                                                                                                                                                                    | Jdbc 连接db 名                  |
-| table_schema | PgSQL 默认为public； Sql server默认为dbo | 否      | string | schema                                                                                                                                                                                                                                                | Jdbc 连接Schema 名称，通常只用于 PgSql |
-| table_name   | -                                 | 是      | string | table                                                                                                                                                                                                                                                 | 同步的表名                        |
+| Param name   | Default value                             | Is necessary | Parameter type | Recommended value / Example value                                                                                                                                                                                                                     | Description                                  |
+|--------------|-------------------------------------------|--------------|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------|
+| user_name    | -                                         | Yes          | string         | abc                                                                                                                                                                                                                                                   | Jdbc username                                |
+| password     | -                                         | Yes          | string         | password                                                                                                                                                                                                                                              | Jdbc password                                |
+| connections  | -                                         | Yes          |                | [ { "db_url": "jdbc:mysql://address=(protocol=tcp)(host=192.168.1.202)(port=3306)/test?rewriteBatchedStatements=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&jdbcCompliantTruncation=false" } ] | Jdbc connection urls                         |
+| db_name      | -                                         | Yes          | string         | db                                                                                                                                                                                                                                                    | Database to connect                          |
+| table_schema | "public" for PgSql<br>"dbo" for Sqlserver | No           | string         | schema                                                                                                                                                                                                                                                | Schema to connect，usually used only in PgSql |
+| table_name   | -                                         | Yes          | string         | table                                                                                                                                                                                                                                                 | Table to write                               |
 
-写入模式配置参数
+#### Write Mode Configuration Parameter
 
-| 参数名称       | 参数默认值  | 参数是否必须 | 参数类型   | 建议值 or 示例值 | 参数含义                                                                                                         |
-|------------|--------|--------|--------|------------|--------------------------------------------------------------------------------------------------------------|
-| write_mode | insert | 否      | string | insert    | Insert 写入模式。为了保证重复执行结果的一致性。写入前会根据分区列清除数据。最终生成的写入语句类似INSERT INTO xx (xx) VALUES (xx)                          |
-| write_mode |        |        |        | overwrite  | Overwrite 写入模式。写入前不会清除数据。最终生成的写入语句类似 INSERT INTO xx (xx) VALUES (xx) ON DUPLICATE KEY UPDATE (xx) VALUES(xx) |
+| Param name | Default value | Is necessary | Parameter type | Recommended value / Example value | Description                                                                                                                                                                                                                        |
+|------------|---------------|--------------|----------------|-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| write_mode | insert        | No           | string         | insert                            | Insert Write mode. In order to ensure the consistency of repeated execution results, data is cleared according to the partition column before writing. The resulting write statement is similar to INSERT INTO xx (xx) VALUES (xx) |
+| write_mode |               |              |                | overwrite                         | Overwrite write mode. Data is not cleared before writing. The resulting write statement looks like INSERT INTO xx (xx) VALUES (xx) ON DUPLICATE KEY UPDATE (xx) VALUES(xx)                                                         |
 
-Insert 模式下会根据 partition 信息进行数据删除，下面的参数针对 insert 模式：
+In insert mode, data will be deleted according to partition information. The following parameters are for insert mode:
 
-| 参数名称                     | 参数默认值 | 参数是否必须 | 参数类型   | 建议值 or 示例值         | 参数含义                                                                                                                                              |
-|--------------------------|-------|--------|--------|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| partition_name           | -     | 是      | string | date               | 分区名称，这是一个逻辑概念，写入数据前会根据该字段删除partition value的数据                                                                                                              |
-| partition_value          | -     | 是      | string | 20220727           | 分区值                                                                                                                                               |
-| partition_pattern_format | -     | 否      | string | yyyyMMdd/yyyy-MM-dd | 分区字段模式                                                                                                                                              |
-| mysql_data_ttl           | 0     | 否      | int    | 0                  | 数据库数据保存的天数。会根据配置的ddl 和 partition_name 字段的值进行删除操作。比如 ttl 设置为3，partition name 为 date，partition value 设置为 20220727，则会将数据库中所有 date<=20220724 的数据删除 |
-| delete_threshold         | 10000 | 否      | int    | 10000              | 删除时，每次删除数据的条数                                                                                                                                         |
-| delete_interval_ms       | 100   | 否      | int    | 100                | 两次删除之间的间隔                                                                                                                                         |
-写入配置信息
+| Param name               | Default value | Is necessary | Parameter type | Recommended value / Example value | Description                                                                                                                                                                                                                                                                                                                         |
+|--------------------------|---------------|--------------|----------------|-----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| partition_name           | -             | Yes          | string         | date                              | Partition name, this is a logical concept, meaning the data of partition value will be deleted according to this field before writing data.                                                                                                                                                                                         |
+| partition_value          | -             | Yes          | string         | 20220727                          | Partition value                                                                                                                                                                                                                                                                                                                     |
+| partition_pattern_format | -             | No           | string         | yyyyMMdd/yyyy-MM-dd               | Partition Field format                                                                                                                                                                                                                                                                                                              |
+| mysql_data_ttl           | 0             | No           | int            | 0                                 | The number of days that  data is kept in database. The delete operation will be performed according to the value of the configured ddl and partition_name fields.<br>For example, if ttl is set to 3, partition name is date, and partition value is set to 20220727, all data with date<=20220724 in the database will be deleted. |
+| delete_threshold         | 10000         | No           | int            | 10000                             | When deleting, the number of pieces of data deleted each time                                                                                                                                                                                                                                                                       |                                                                                                                                        |
+| delete_interval_ms       | 100           | No           | int            | 100                               | Interval between deletes                                                                                                                                                                                                                                                                                                            |
+#### Parameters for batch write
 
-| 参数名称                   | 参数默认值 | 参数是否必须 | 参数类型 | 建议值 or 示例值 | 参数含义       |
-|------------------------|-------|--------|------|------------|------------|
-| write_batch_interval   | 100   | 否      | int  | 100        | 写入batch 大小 |
-| write_retry_times      | 3     | 否      | int  | 3          | 写入时重试次数    |
-| retry_interval_seconds | 10    | 否      | int  | 10         | 两次重试间的间隔   |
+| Param name             | Default value | Is necessary | Parameter type | Recommended value / Example value | Description                 |
+|------------------------|---------------|--------------|----------------|-----------------------------------|-----------------------------|
+| write_batch_interval   | 100           | No           | int            | 100                               | write batch interval        |
+| write_retry_times      | 3             | No           | int            | 3                                 | max retry time when writing |
+| retry_interval_seconds | 10            | No           | int            | 10                                | retry interval (s)          |
 
-其他配置
+#### Other parameters
 
-| 参数名称         | 参数默认值 | 参数是否必须   | 参数类型   | 建议值 or 示例值 | 参数含义             |
-|--------------|-------|----------|--------|------------|------------------|
-| pre_query    | -     | 否        | string | Select 1   | 连接数据库后最先执行的语句    |
-| verify_query | -     | 否        | string | Select 1   | 任务运行后执行的校验语句     |
-| shard_key    | -     | 否（分片库必须） | string | id         | 分片库的分片键，非分片库不用配置 |
+| Param name   | Default value | Is necessary                   | Parameter type | Recommended value / Example value | Description                                                                          |
+|--------------|---------------|--------------------------------|----------------|-----------------------------------|--------------------------------------------------------------------------------------|
+| pre_query    | -             | No                             | string         | Select 1                          | The first statement to execute after connecting to the database                      |
+| verify_query | -             | No                             | string         | Select 1                          | Validation statement to be executed after the task runs                              |
+| shard_key    | -             | Necessary for sharded database | string         | id                                | The shard key of the sharded database, no need to configure the non-sharded database |
 
-PgSql 写入的定制参数
+#### Parameters for PgSql 
 
-| 参数名称                     | 参数默认值 | 参数是否必须 | 参数类型   | 建议值 or 示例值 | 参数含义                                                 |
-|--------------------------|-------|--------|--------|------------|------------------------------------------------------|
-| primary_key              | -     | 否      | string | id         | 表的主键，pgSQL 删除时如果需要限制速率需要利用主键值使用 select limit语句限制删除速率 |
-| upsert_key               | -     | 否      | string | id         | 唯一性索引，支持覆盖写，PG只支持对单个唯一性索引做覆盖写                        |
-| delete_threshold_enabled | TRUE  | 否      | string | Truefalse  | 是否需要限制删除速率，默认为true，false时不需要提供primary key            |
-| is_truncate_mode         | FALSE | 否      | string | Truefalse  | 是否为truncate模式，true会先删除全表同时不需要分区列；非truncate模式需要有分区列   |
+| Param name               | Default value | Is necessary | Parameter type | Recommended value / Example value | Description                                                                                                                                                                      |               
+|--------------------------|---------------|--------------|----------------|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| primary_key              | -             | No           | string         | id                                | The primary key of the table, if you need to limit the rate when pgSQL deletes, you need to use the primary key value to use the select limit statement to limit the delete rate |
+| upsert_key               | -             | No           | string         | id                                | Unique index, supports overwriting, PG only supports overwriting for a single unique index                                                                                       |
+| delete_threshold_enabled | TRUE          | No           | string         | Truefalse                         | Whether to limit the deletion rate, the default is true, when false, you do not need to provide the primary key                                                                  |
+| is_truncate_mode         | FALSE         | No           | string         | Truefalse                         | Whether it is truncate mode, true will delete the whole table first and no partition column is required; non-truncate mode requires a partition column                           |
 
-Oracle 写入的定制参数
+#### Parameters for Oracle
 
-| 参数名称                     | 参数默认值 | 参数是否必须 | 参数类型   | 建议值 or 示例值 | 参数含义                                                 |
-|--------------------------|-------|--------|--------|------------|------------------------------------------------------|
-| primary_key              | -     | 是 (Sink)   | string（区分大小写）   | ID         | 表的主键，Oracle 删除时如果需要限制速率需要利用主键值使用 select limit语句限制删除速率 |
-| partition_name           | -     | 是     | string (区分大小写)   | DATETIME   | 跟通用参数相同，除了数值必須区分大小写 |
-| db_name                  | -     | 是     | string (区分大小写)   | DB         | 跟通用参数相同，除了数值必須区分大小写 |
-| columns.name             | -     | 否     | string (区分大小写)   | COLUMN     |  跟通用参数相同，除了数值必須区分大小写 |
+| Param name               | Default value | Is necessary | Parameter type | Recommended value / Example value | Description                                                                                                                                                                      |               
+|--------------------------|---------------|--------------|----------------|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| primary_key              | -             | Yes in Sink  | string (case sensitive)        | ID                | The primary key of the table, if you need to limit the rate when Oracle deletes, you need to use the primary key value to use the select limit statement to limit the delete rate |
+| partition_name           | -             | Yes          | string (case sensitive)        | DATETIME                | Same as general parameters except value is case sensitive. |
+| db_name                  | -             | Yes          | string (case sensitive)        | DB                | Same as general parameters except value is case sensitive. |
+| columns.name             | -             | No           | string (case sensitive)        | COLUMN            | Same as general parameters except value is case sensitive. |
+## Related document
 
-## 相关文档
-
-配置示例文档 [Example](./jdbc-example.md).
+Configuration examples: [jdbc-connector-example](./jdbc_example.md)

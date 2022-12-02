@@ -1,6 +1,6 @@
 # Elasticsearch connector
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 
 ## Main function
@@ -12,7 +12,7 @@ The Elasticsearch connector can be used in stream and batch scenarios, providing
 
 ## Maven depedency
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>connector-elasticsearch</artifactId>

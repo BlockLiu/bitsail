@@ -1,23 +1,23 @@
-# Doris连接器配置示例
+# Doris connector examples
 
-父目录: [doris-connector](./doris.md)
+Parent documents: [doris-connector](./doris.md)
 
 
-## 测试用Doris配置
+## Doris cluster info
 
-假设doris集群配置如下:
- - fe: `127.0.0.1:1234`
- - jdbc query地址: `127.0.0.1:4321`
+Assuming the doris
+- fe: `127.0.0.1:1234`
+- jdbc query地址: `127.0.0.1:4321`
 
-账户信息为: 
- - 用户: `test_user`
- - 密码: `1234567`
+Account:
+- User: `test_user`
+- Password: `1234567`
 
-要写入的库表为:
- - 库: test_db
- - 表: test_doris_table
+Target database and table:
+- Database:: test_db
+- Table: test_doris_table
 
-该表的建表语句为:
+DDL statement is:
 
 ```sql
 CREATE TABLE `test_db`.`test_doris_table` ( 
@@ -44,9 +44,9 @@ PROPERTIES
 ```
 
 
-## Doris写连接器
+## Doris writer
 
-可用下面的配置写入上述`test_db.test_doris_table`表的 `p20221010` 分区:
+You can use the following configuration to write data into `p20221010` partition of table `test_db.test_doris_table`.
 
 ```json
 {

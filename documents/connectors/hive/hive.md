@@ -1,6 +1,6 @@
 # Hive connector
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 The ***BitSail*** hive connector supports reading and writing to hive tables. The main function points are as follows:
 
@@ -28,7 +28,7 @@ The ***BitSail*** hive connector supports reading and writing to hive tables. Th
 
 ## Maven dependency
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>bitsail-connector-hive</artifactId>

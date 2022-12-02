@@ -1,6 +1,6 @@
 # FTP/SFTP connector
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 ## Main functionalities
 
@@ -11,7 +11,7 @@ This connector can be used to read files from FTP/SFTP servers in batch scenario
 
 ## Maven dependency
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>bitsail-connector-ftp</artifactId>
@@ -107,3 +107,5 @@ The following parameters are supported to adjust the csv parsing style:
 | `job.common.csv_escape`           |               | escape character                                                           |
 | `job.common.csv_quote`            |               | quote character                                                            |
 | `job.common.csv_with_null_string` |               | Specify the conversion value of null field. It is not converted by default |
+
+Configuration examples: [ftp-connector-example](./ftp-example.md)

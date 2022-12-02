@@ -1,12 +1,12 @@
 # Druid connector
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 ***BitSail*** Druid connector supports writing druid data-sources.
 
 ## Maven dependency
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>connector-druid</artifactId>

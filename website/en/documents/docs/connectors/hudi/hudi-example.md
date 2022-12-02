@@ -1,10 +1,10 @@
-# Hudi连接器使用示例
+# Hudi connector examples
 
-上级文档: [hudi连接器](./hudi.md)
+Parent document: [hudi-connector](./hudi.md)
 
-## Hudi读连接器示例
+## Hudi reader example
 
-读取hudi表的用户配置:
+Configuration for reading the test hudi table:
 
 ```json
 {
@@ -27,9 +27,9 @@
 }
 ```
 
-## Hudi写连接器示例
+## Hudi writer example
 
-写入hudi表的用户配置:
+Configuration for writing the test hudi table:
 
 ```json
 {
@@ -76,20 +76,20 @@
 }
 ```
 
-## Hudi compaction示例
+## Hudi compaction example
 
-实例参数用于压缩Hudi表:
+Configuration for compacting the test hudi table:
 
 ```json
 {
   "job":{
     "reader":{
       "path":"/path/to/table",
-      "class":"com.bytedance.bitsail.connector.legacy.hudi.source.HudiCompactSourceDAGBuilder"
+      "class":"com.bytedance.bitsail.connector.legacy.hudi.dag.HudiCompactSourceDAGBuilder"
     },
     "writer":{
       "path":"/path/to/table",
-      "class":"com.bytedance.bitsail.connector.legacy.hudi.sink.HudiCompactSinkDAGBuilder"
+      "class":"com.bytedance.bitsail.connector.legacy.hudi.dag.HudiCompactSinkDAGBuilder"
     }
   }
 }

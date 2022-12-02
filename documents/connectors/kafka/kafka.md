@@ -2,7 +2,7 @@
 
 -----
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 The Kafka connector supports the following functional points:
 
@@ -13,7 +13,7 @@ The Kafka connector supports the following functional points:
 
 The Kafka connector internally uses `org.apache.kafka:kafka-clients` (version 1.0.1) for data writing. So when using kafka to write the connector, you need to pay attention that the target kafka cluster should be able to use this version of kafka-clients.
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>bitsail-connector-kafka</artifactId>

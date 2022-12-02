@@ -1,19 +1,18 @@
-# Kafka连接器使用示例
+# Kafka connector examples
 
 -----
 
+Parent document: [Kafka-connector](./kafka.md)
 
-上级文档: [Kafka-connector](./kafka.md)
+## Kafka configuration
 
-## 测试Kafka配置示例
+Suppose the kafka configuration used by the test is as follows:
 
-假设测试使用的kafka配置如下:
+- `bootstrap.servers`: PLAINTEXT://localhost:9092
+- `topic`: test_topic
+- `group_id`: test_consumer_group
 
- - `bootstrap.servers`: PLAINTEXT://localhost:9092
- - `topic`: test_topic
- - `group_id`: test_consumer_group
-
-## Kafka读连接器示例
+## Kafka reader example
 
 ```json
 {
@@ -51,7 +50,7 @@
 }
 ```
 
-## Kafka写连接器示例
+## Kafka writer example
 
 ```json
 {

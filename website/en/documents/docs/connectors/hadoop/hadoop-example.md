@@ -1,16 +1,16 @@
-# Hadoop连接器使用示例
+# Hadoop connector examples
 
-上级文档: [hadoop连接器](./hadoop.md)
+Parent document: [hadoop-connector](./hadoop.md)
 
-下面展示了如何使用用户参数配置读取如下json格式hdfs文件。
+The following configuration shows how to organize parameter configuration to read the following json format hdfs file.
 
-- 示例json数据
+- Example json data
 ```json
 {"id":0,"string_type":"test_string","map_string_string":{"k1":"v1","k2":"v2","k3":"v3"},"array_string":["a1","a2","a3","a4"]}
 ```
 
 
-- 用于读取上述格式hdfs文件的配置
+- Configuration file used to read the above hdfs file:
 
 ```json
 {

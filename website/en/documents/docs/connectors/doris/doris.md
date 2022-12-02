@@ -1,15 +1,14 @@
-# Doris连接器
+# Doris connector
 
-上级文档: [connectors](../../../connectors.md)
+Parent document: [connectors](../../../connectors.md)
 
-***BitSail*** Doris连接器支持批式和流式写doris，其支持的主要功能点如下
- 
- - 使用StreamLoad方式写Doris表
- - 支持分区创建再写入
- - 支持多种table mode
+***BitSail*** Doris connector supports writing doris. The main function points are as follows:
+
+- Use StreamLoad to write doris.
+- Support firstly create and then write partition
 
 
-## 依赖引入
+## Maven dependency
 
 ```xml
 <dependency>
@@ -19,11 +18,12 @@
 </dependency>
 ```
 
-## Doris写入
+## Doris Writer
 
-### 支持的数据类型
+### Supported data type
 
-写连接器使用json或者csv格式传输数据，支持常见的doris数据类型: 
+Doris writer uses stream load, and the content type can be csv or json.
+It supports common data type in doris:
 
 - CHAR
 - VARCHAR
@@ -46,9 +46,10 @@
 - DATE
 - DATETIME
 
-### 主要参数
+### Parameters
 
-写连接器参数在`job.writer`中配置，实际使用时请注意路径前缀。示例:
+
+The following mentioned parameters should be added to `job.writer` block when using, for example:
 
 ```json
 {
@@ -62,31 +63,30 @@
 }
 ```
 
-#### 必需参数
+#### Necessary parameters
 
-| 参数名称              | 是否必填 | 参数枚举值 | 参数含义                                                                                      |
-|:------------------|:-----|:------|:------------------------------------------------------------------------------------------|
-| class             | 是  |       | Doris写连接器类型, `com.bytedance.bitsail.connector.doris.sink.DorisSink` |
-| fe_hosts   | 是  |       | Doris FE地址, 多个地址用逗号分隔 |
-| mysql_hosts        | 是  |       | JDBC连接Doris的地址, 多个地址用逗号分隔 |
-| user| 是 | | Doris账户 |
-| password| 是 | | Doris密码，可为空 |
-| db_name| 是 | | 要写入的doris库 |
-| table_name| 是 | | 要写入的doris表 |
-| partitions | 分区表必需 | | 要写入的分区 |
-| table_has_partition | 非分区表必需 | | 非分区表填写true |
-| table_model | 是 | UNIQUE | 要写入表的模型,目前仅支持unique表写入 | 
-
+| Param name                   | Required | Optional value | Description                                                                                                    |
+|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
+| class             | yes  |       | Doris writer class name, `com.bytedance.bitsail.connector.doris.sink.DorisSink` |
+| fe_hosts   | yes  |       | Doris FE address, multi addresses separated by comma |
+| mysql_hosts        | yes  |       | Doris jdbc query address , multi addresses separated by comma |
+| user| yes | | Doris account user |
+| password| yes | | Doris account password, can be empty  |
+| db_name| yes | | database to write |
+| table_name| yes | | table to write |
+| partitions | Yes if target table has partition | | target partition to write |
+| table_has_partition | Yes if target table does not have partition | | True if target table does not have partition  |
+| table_model | yes | UNIQUE | Table model of target table. Currently only support unique table. | 
 
 <!--AGGREGATE<br/>DUPLICATE-->
 
-注意，partitions格式要求如下:
- 1. 可写入多个partition，每个partition
- 2. 每个partition内需要有:
-    1. `name`: 要写入的分区名
-    2. `start_range`, `end_range`: 该分区范围
+Notice, `partitions` has following requirements:
+ 1. You can determine multi partitions
+ 2. Each partition should contain:
+    1. `name`: name of the partition
+    2. `start_range`, `end_range`: left and right range of the partition
 
-partitions示例:
+partitions example:
 ```json
 {
   "partitions": [
@@ -119,32 +119,23 @@ partitions示例:
 
 
 
-#### 可选参数
+#### Optional parameters
 
-| 参数名称                                    | 是否必填  | 参数枚举值 | 参数含义                                                 |
-|:----------------------------------------|:------|:------|:-----------------------------------------------------|
-| writer_parallelism_num | 否 |       | 指定Doris写并发                       |
-| sink_flush_interval_ms | 否 | | Upsert模式下的flush间隔, 默认5000 ms |
-| sink_max_retries | 否 | | 写入的最大重试次数，默认3 |
-| sink_buffer_size | 否  | | 写入buffer最大值，默认 20971520 bytes (20MB) |
-| sink_buffer_count | 否 | | 写入buffer的最大条数，默认100000 | 
-| sink_enable_delete | 否 | | 是否支持delete事件同步 |
-| sink_write_mode | 否 | 目前只支持以下几种:<br/>STREAMING_UPSERT<br/>BATCH_UPSERT<br/>BATCH_REPLACE | 写入模式 |
-| stream_load_properties | 否 | | 追加在streamload url后的参数，map<string,string>格式 |
-| load_contend_type | 否 | csv<br/>json | streamload使用的格式，默认json |
-| csv_field_delimiter | 否 | | csv格式的行内分隔符, 默认逗号 "," |
-| csv_line_delimiter | 否 | | csv格式的行间分隔符, 默认 "\n" |
-
-
-sink_write_mode的说明如下:
- - STREAMING_UPSERT: 流式upsert写入
- - BATCH_UPSERT: 批式upsert写入
- - BATCH_REPLACE: 批式replace写入
+| Param name             | Required | Optional value | Description                                                           |
+|:-----------------------|:---------|:---------------|:----------------------------------------------------------------------|
+| writer_parallelism_num | no |       | Writer parallelism num   |
+| sink_flush_interval_ms | no | | Flush interval in upsert mode, default 5000 ms |
+| sink_max_retries | no | | Max retry times, default 3 |
+| sink_buffer_size | no  | | Max size of buffer, default 20971520 bytes (20MB) |
+| sink_buffer_count | no | | Max number of records can be buffered, default 100000 |
+| sink_write_mode | no | STREAMING_UPSERT<br/>BATCH_UPSERT<br/>BATCH_REPLACE | Write mode. |
+| stream_load_properties | no | | Stream load parameters that will be append to the stream load url. Format is standard json map. |
+| load_contend_type | no | csv<br/>json | Content format of streamload, default json |
+| csv_field_delimiter | no | | field delimiter used in csv, default "," |
+| csv_line_delimiter | no | | line delimiter used in csv, default "\n" |
 
 
+## Related document
 
 
-
-## 相关文档
-
-配置示例文档: [doris-connector-example](./doris-example.md)
+Configuration examples: [doris-connector-example](./doris-example.md)

@@ -1,6 +1,6 @@
 # Doris connector
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 ***BitSail*** Doris connector supports writing doris. The main function points are as follows:
 
@@ -10,7 +10,7 @@ Parent document: [connectors](../introduction.md)
 
 ## Maven dependency
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>bitsail-connector-doris</artifactId>

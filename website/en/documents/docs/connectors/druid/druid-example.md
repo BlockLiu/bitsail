@@ -1,10 +1,11 @@
-# Druid连接器配置示例
+# Druid connector configuration examples
 
-父目录: [druid-connector](./druid.md)
+Parent document: [druid-connector](./druid.md)
 
-## Druid写连接器示例配置
+## Druid writer example
 
-假设当前有一个测试Druid集群，其master地址为"127.0.0.1:64086"，则可以通过如下配置写入test_druid_datasource资料源。
+
+Assuming there is a test druid cluster with master address "127.0.0.1:64086", then we can use the following configuration to write into `test_druid_datasource` datasource.
 
 ```json
 {

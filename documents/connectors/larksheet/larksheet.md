@@ -1,6 +1,6 @@
 # LarkSheet connector
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 The ***Bitsail*** LarkSheet connector supports reading lark sheets.
 The main function points are as follows:
@@ -12,7 +12,7 @@ The main function points are as follows:
 
 ## Maven dependency
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>bitsail-connector-larksheet</artifactId>

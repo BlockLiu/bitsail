@@ -1,12 +1,12 @@
 # Kudu connector
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 ***BitSail*** Kudu connector supports reading and writing kudu tables.
 
 ## Maven dependency
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>connector-kudu</artifactId>

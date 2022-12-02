@@ -1,6 +1,6 @@
 # HBase connector
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 ***Bitsail*** HBase can be used to read and write HBase tables.
 The main function points are as follows:
@@ -10,7 +10,7 @@ The main function points are as follows:
 
 ## Maven dependency
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>bitsail-connector-hbase</artifactId>

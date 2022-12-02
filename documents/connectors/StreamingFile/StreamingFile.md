@@ -1,6 +1,6 @@
 # StreamingFile
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 *StreamingFile* Connector mainly used in streaming, and it supports write both hdfs and use hive `Exactly-Once` semantics.
 Provide reliable guarantee for real-time data warehouses.

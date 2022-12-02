@@ -1,6 +1,6 @@
 # Hadoop connector
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 
 ## Main function
@@ -12,7 +12,7 @@ Hadoop connector can be used to read hdfs files in batch scenarios. Its function
 
 ## Maven dependency
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>bitsail-connector-hadoop</artifactId>

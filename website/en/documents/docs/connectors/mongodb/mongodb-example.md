@@ -1,14 +1,16 @@
-# MongoDB连接器配置示例
+# MongoDB connector examples
 
-父目录: [mongodb-connector](./mongodb.md)
+Parent document: [mongodb-connector](./mongodb.md)
 
 -----
 
-假设在本地启动了一个mongoDB，连接地址为mongodb://localhost:1234。在其中创建了名为 `test_db` 的database和名为 `test_collection` 的文档集合。
+Suppose starting a local MongoDB with connection url `mongodb://localhost:1234`.
+We create a database `test_db` and a collection `test_collection` on it.
 
-## MongoDB读连接器 
 
-假设想在文档包含 _id, string_field, int_field 三个字段，则可用如下配置读取。
+## MongoDB Reader
+
+If the documents contains (_id, string_field, int_field) these three fields, we can use the following configuration to read.
 
 ```json
 {
@@ -43,9 +45,9 @@
 }
 ```
 
-## MongoDB写连接器
+## MongoDB Writer
 
-假设想在文档中写入 id, string_field, integer_field 三个字段，那么可以用如下配置进行写入。
+If you want to write (id, string_field, integer_field) these three fields into document, then you can use the following configuration.
 
 
 ```json

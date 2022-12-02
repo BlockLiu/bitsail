@@ -1,16 +1,16 @@
-# Hadoop连接器
+# Hadoop connector
 
-上级文档: [connectors](../../../connectors.md)
+Parent document: [connectors](../../../connectors.md)
 
 
-## 主要功能
+## Main function
 
-Hadoop连接器可用于批式场景下的hdfs文件读取。其功能点主要包括:
+Hadoop connector can be used to read hdfs files in batch scenarios. Its function points mainly include:
 
- - 支持同时读取多个hdfs目录下的文件
- - 支持读取多种格式的hdfs文件
+ - Support reading files in multiple hdfs directories at the same time
+ - Support reading hdfs files of various formats
 
-## 依赖引入
+## Maven dependency
 
 ```xml
 <dependency>
@@ -20,34 +20,35 @@ Hadoop连接器可用于批式场景下的hdfs文件读取。其功能点主要�
 </dependency>
 ```
 
-## 支持的数据类型
- - 支持的基础数据类型如下:
-    - 整数类型:
+## Supported data types
+ - Basic data types supported by Hadoop connectors:
+      - Integer type:
         - short
         - int
         - long
-        - bitinteger
-    - 浮点类型:
-        - float
-        - double
-        - bigdecimal
-    - 时间类型:
-        - timestamp
-        - date
-        - time
-    - 字符类型:
-        - string
-    - 布尔类型:
-        - boolean
-    - 二进制类型:
-        - binary
- - 支持的复杂数据类型包括:
+        - biginterger
+      - Float type:
+          - float
+          - double
+          - bigdecimal
+      - Time type:
+          - timestamp
+          - date
+          - time
+      - String type:
+          - string
+      - Bool type:
+          - boolean
+      - Binary type:
+          - binary
+- Composited data types supported by Hadoop connectors:
     - map
     - list
-    
-## 主要参数
 
-以下参数使用在`job.reader`配置中，实际使用时请注意路径前缀。示例:
+## Parameters
+
+The following mentioned parameters should be added to `job.reader` block when using, for example:
+
 ```json
 {
   "job": {
@@ -58,25 +59,25 @@ Hadoop连接器可用于批式场景下的hdfs文件读取。其功能点主要�
 }
 ```
 
-### 必需参数
+###  Necessary parameters
 
-| 参数名称         | 参数是否必需 | 参数枚举值       | 参数含义                                                                              |
-|:-------------|:-------|:------------|:----------------------------------------------------------------------------------|
-| class        | 是      |             | Hadoop读连接器类名，只能为`com.bytedance.bitsail.connector.hadoop.source.HadoopInputFormat` |
-| path_list    | 是      |             | 指定读入文件的路径。可指定多个路径，使用`','`分隔                                                       |
-| content_type | 是      | JSON<br>CSV | 指定读入文件的格式，详情参考[支持的文件格式](#jump_format)                                             |
-| columns      | 是      |             | 数据字段名称及类型                                                                         |
+| Param name   | Required | Optional value | Description                                                                                       |
+|:-------------|:---------|:---------------|:--------------------------------------------------------------------------------------------------|
+| class        | Yes      |                | Class name of hadoop connector, `com.bytedance.bitsail.connector.hadoop.source.HadoopInputFormat` |
+| path_list    | Yes      |                | Specifies the path of the read in file. Multiple paths can be specified, separated by `','`       |
+| content_type | Yes      | JSON<br>CSV    | Specify the format of the read in file. For details, refer to[支持的文件格式](#jump_format)              |
+| columns      | Yes      |                | Describing fields' names and types                                                                |
 
-### 可选参数
-| 参数名称                   | 参数是否必需 | 参数枚举值 | 参数含义                         |
-|:-----------------------|:-------|:------|:-----------------------------|
-| hadoop_conf            | 否      |       | 指定hadoop的读入配置，格式为标准json格式字符串 |
-| reader_parallelism_num | 否      |       | 读并发数                         |
+### Optional parameters
+| Param name             | Required | Optional value | Description                                                                 |
+|:-----------------------|:---------|:---------------|:----------------------------------------------------------------------------|
+| hadoop_conf            | No       |                | Specify the read configuration of hadoop in the standard json format string |
+| reader_parallelism_num | No       |                | Reader parallelism                                                          |
 
 
-## <span id="jump_format">支持的文件格式</span>
+## <span id="jump_format">Supported format</span>
 
-支持对以下格式的文件进行解读:
+Support the following formats:
 
 - [JSON](#jump_json)
 - [CSV](#jump_csv)
@@ -84,27 +85,29 @@ Hadoop连接器可用于批式场景下的hdfs文件读取。其功能点主要�
 <!-- - [PROTOBUF]&#40;#jump_protobuf&#41; ) -->
 
 ### <span id="jump_json">JSON</span>
-支持对json格式的文本文件进行解析，要求每行均为标准的json字符串。
-支持以下参数对json解析方式进行调整:
+It supports parsing text files in json format. Each line is required to be a standard json string. 
+
+The following parameters are supported to adjust the json parsing stype:
 
 
-| 参数名称                                      | 参数默认值 | 参数说明                                                                          |
-|-------------------------------------------|-------|-------------------------------------------------------------------------------|
-| `job.common.case_insensitive`             | true  | 是否对json字段中的key大小写敏感                                                           |
-| `job.common.json_serializer_features`     |       | 指定`FastJsonUtil`进行解析时的模式，格式为`','`分隔的字符串，例如`"QuoteFieldNames,UseSingleQuotes"` |
-| `job.common.convert_error_column_as_null` | false | 是否将解析出错的字段置为null                                                              |
+| Parameter name                            | Default value | Description                                                                                                                          |
+|-------------------------------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `job.common.case_insensitive`             | true          | Whether to be sensitive to the case of the key in the json field                                                                     |
+| `job.common.json_serializer_features`     |               | Specify the mode when 'FastJsonUtil' is parsed. The format is `','` separated string, for example`"QuoteFieldNames,UseSingleQuotes"` |
+| `job.common.convert_error_column_as_null` | false         | Whether to set the field with parsing error to null                                                                                  |
 
 ### <span id="jump_csv">CSV</span>
-支持对csv格式的文本文件进行解析，要求每行均为标准的csv字符串。
-支持以下参数对csv解析方式进行调整:
+Support parsing of text files in csv format. Each line is required to be a standard csv string.
+
+The following parameters are supported to adjust the csv parsing style:
 
 
-| 参数名称                              | 参数默认值 | 参数说明               |
-|-----------------------------------|-------|--------------------|
-| `job.common.csv_delimiter`        | `','` | csv分隔符             |
-| `job.common.csv_escape`           |       | escape字符           |
-| `job.common.csv_quote`            |       | quote字符            |
-| `job.common.csv_with_null_string` |       | 指定null字段的转化值，默认不转化 |
+| Parameter name                    | Default value | Description                                                                |
+|-----------------------------------|---------------|----------------------------------------------------------------------------|
+| `job.common.csv_delimiter`        | `','`         | csv delimiter                                                              |
+| `job.common.csv_escape`           |               | escape character                                                           |
+| `job.common.csv_quote`            |               | quote character                                                            |
+| `job.common.csv_with_null_string` |               | Specify the conversion value of null field. It is not converted by default |
 
 <!--
 ### <span id="jump_protobuf">PROTOBUF</span>
@@ -115,18 +118,14 @@ Hadoop连接器可用于批式场景下的hdfs文件读取。其功能点主要�
 
 
 | 参数名称 | 参数是否必需   | 参数说明 |
-
 |--------|----------|---------|
-
 |`job.common.proto.descriptor`| 是 |base64方式存储protobufm描述文件|
-
 |`job.common.proto.class_name`| 是 |指定protobuf描述文件中用于解析的类名|
 -->
 
 ----
 
 
-## 相关文档
+## Related document
 
-配置示例文档 [hadoop连接器示例](./hadoop-example.md)
-
+Configuration examples: [hadoop-connector-example](./hadoop-example.md)

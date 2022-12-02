@@ -1,14 +1,13 @@
-# RocketMQ连接器配置示例
+# RocketMQ connector examples
 
 Parent document: [rocketmq-connector](./rocketmq.md)
 
 
 ## RocketMQ Writer example
 
-假设我们在本地启动了一个RocketMQ服务，其name server地址为 "127.0.0.1:9876", 并且我们在其中创建了一个名为 "test_topic" 的topic。
+Suppose we start a local rocketmq with name service "127.0.0.1:9876", and we create a topic "test_topic" in it.
 
-那么我们可以使用如下的配置文档写入上述topic：
-
+Configuration for writing the rocketmq topic is:
 
 ```json
 {

@@ -1,10 +1,10 @@
-# Kudu连接器配置示例
+# Kudu connector configration examples
 
-父目录: [kudu-connector](./kudu.md)
+Parent document: [kudu-connector](./kudu.md)
 
-## Kudu读连接器示例配置
+## Kudu reader example
 
-假设当前有一个测试kudu集群，其master地址为"127.0.0.1:64086"，则可以通过如下配置读取test_kudu_table表。
+Assuming there is a test kudu cluster with master address "127.0.0.1:64086", then we can use the following configuration to read `test_kudu_table` table.
 
 ```json
 {
@@ -60,10 +60,10 @@
 ```
 
 
-## Kudu写连接器示例配置
+## Kudu writer example
 
 
-假设当前有一个测试kudu集群，其master地址为"127.0.0.1:64086"，则可以通过如下配置写入test_kudu_table表。
+Assuming there is a test kudu cluster with master address "127.0.0.1:64086", then we can use the following configuration to write into `test_kudu_table` table.
 
 ```json
 {

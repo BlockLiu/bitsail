@@ -1,8 +1,9 @@
-# Elasticsearch连接器使用示例
+# Elasticsearch connector examples
 
-上级文档: [elasticsearch连接器](./elasticsearch.md) 
+Parent document: [elasticsearch-connector](./elasticsearch.md)
 
-如下展示了如何使用用户参数配置写入指定的elasticsearch索引。
+
+The following configuration shows how to organize parameter configuration to write the specified Elasticsearch index.
 
 ```json
 {

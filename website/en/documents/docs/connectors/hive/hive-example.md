@@ -1,27 +1,27 @@
-# Hive连接器使用示例
+# Hive connector examples
 
-上级文档: [hive连接器](./hive.md)
+Parent document: [hive-connector](./hive.md)
 
-下面展示如何使用用户参数配置读取测试hive表:
+The following shows test hive table with user parameters and how to read/write it with hive connectors.
 
-## 测试hive表信息
- - 示例hive信息：
-     - hive库名: test_db
-     - hive表名: test_table
-     - metastore uri地址: `thrift://localhost:9083`
-     - 分区: p_date
-     - 表结构:
+## Test hive table information
+- Example hive info:
+    - hive database name: test_db
+    - hive table name: test_table
+    - metastore uri: `thrift://localhost:9083`
+    - partition: p_date
+    - DDL:
 
-         | 字段名 | 字段类型 | 说明 |
-         |-------|--------| ---- |
-         | id | bigint | |
-         | state | string | |
-         | county | string | |
-         | p_date | string | 分区字段 |
+      | filed name | field type | description     |
+      |-------|-----------------| ---- |
+      | id | bigint | -               |
+      | state | string | -               |
+      | county | string | -               |
+      | p_date | string | partition tield |
 
-## hive读连接器示例
+## Hive reader example
 
-读取上述测试hive表的用户配置:
+Configuration for reading the above test hive table:
 
 ```json
 {
@@ -52,9 +52,9 @@
 }
 ```
 
-## hive写连接器示例
+## Hive writer example
 
-写入上述测试hive表的用户配置:
+Configuration for writing the above test hive table:
 
 ```json
 {

@@ -1,6 +1,6 @@
 # MongoDB connector
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 ***BitSail*** MongoDB connector supports reading and writing MongoDB. The main function points are as follows:
 
@@ -10,7 +10,7 @@ Parent document: [connectors](../introduction.md)
 
 ## Maven dependency
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>bitsail-connector-mongodb</artifactId>

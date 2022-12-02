@@ -1,5 +1,7 @@
 ## HDFS's Example
 
+Parent document: [StreamingFile-connector](./StreamingFile.md)
+
 ```json
 {
   "job": {

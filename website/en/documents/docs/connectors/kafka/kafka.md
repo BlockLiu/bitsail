@@ -1,17 +1,17 @@
-# Kafka连接器
+# Kafka connector
 
 -----
 
-上级文档: [connectors](../../../connectors.md)
+Parent document: [connectors](../../../connectors.md)
 
-Kafka连接器支持如下功能点:
+The Kafka connector supports the following functional points:
 
- - 批式场景下支持 `At Least Once` 的写入
- - 流式场景下支持 `Exactly Once` 的读取
+ - `At Least Once` write in batch scenarios
+ - `Exactly Once` read in streaming scenarios
 
-## 依赖引入
+## Maven dependency
 
-Kafka连接器内部使用 1.0.1 版本的`org.apache.kafka:kafka-clients`进行数据写入，因此在使用kafka写连接器时时需要注意目标kafka集群能使用此版本`kafka-clients`连接。
+The Kafka connector internally uses `org.apache.kafka:kafka-clients` (version 1.0.1) for data writing. So when using kafka to write the connector, you need to pay attention that the target kafka cluster should be able to use this version of kafka-clients.
 
 ```xml
 <dependency>
@@ -22,62 +22,65 @@ Kafka连接器内部使用 1.0.1 版本的`org.apache.kafka:kafka-clients`进行
 ```
 
 
-## Kafka读连接器
+## Kafka reader
 
 
-### 参数配置
+### Parameters
 
-| 参数名                    | 参数是否必需 | 参数默认值 | 参数说明                                                                                               |
-|------------------------|--------|-------|----------------------------------------------------------------------------------------------------|
-| class                  | 是      |       | Kafka读连接器类名，只能为`com.bytedance.bitsail.connector.legacy.kafka.source.KafkaSourceFunctionDAGBuilder` |
-| child_connector_type   | 是      |       | 指定连接的消息队列种类，只能为`kafka`                                                                             |
-| reader_parallelism_num | 否      |       | 读并发数                                                                                               |
+| Param name             | Required | Default value | Description                                                                                                               |
+|------------------------|----------|---------------|---------------------------------------------------------------------------------------------------------------------------|
+| class                  | Yes      |               | Reader class name for kafka connector,`com.bytedance.bitsail.connector.legacy.kafka.source.KafkaSourceFunctionDAGBuilder` |
+| child_connector_type   | Yes      |               | Only could be `kafka`                                                                                                     |
+| reader_parallelism_num | No       |               | Reader parallelism num                                                                                                    |
 
 
-#### KafkaConsumer属性设置
+#### Parameters for KafkaConsumer
 
-Kafka连接器底层使用FlinkKafkaConsumer进行读取。初始化FlinkKafkaConsumer的属性或者kafka信息均通过选项`job.reader.connector`传入，具体形式如下:
+The underlying Kafka connector uses `FlinkKafkaConsumer` for reading. The properties or kafka information of the initialized FlinkKafkaConsumer are passed in through options `job.reader.connector`. You can specify them as follows:
+
 
 ```json
 {
   "job": {
     "reader": {
       "connector": {
-        "prop_key": "prop_value"   // "prop_key"和"prop_value"代指属性key和属性value
+        "prop_key": "prop_value"   // "prop_key" means property key, while "prop_val" means property value
       }
     }
   }
 }
 ```
 
-`job.reader.connector`支持 <string,string> 形式的KV配置，其中:
- - `prop_key`: KafkaConsumer属性key
- - `prop_value`: KafkaConsumer属性value
+`job.reader.connector` supports KV configuration in the form of <string,string>, where:
+- `prop_key`: FlinkKafkaConsumer property key
+- `prop_value`: FlinkKafkaConsumer property key
 
-下面列举了一些常见的属性key:
+Some common property used are listed below:
 
-<b>1. kafka集群属性</b>
+<b>1. Kafka cluster properties</b>
 
-| 属性key                       | 属性是否必需 | 属性默认值 | 属性可选值 | 属性说明         |
-|-----------------------------|--------|-------|-------|--------------|
-| connector.bootstrap.servers | 是      |       |       | 读取的kafka集群地址 |
-| connector.topic             | 是      |       |       | 读取的topic     |
-| connector.group.id          | 是      |       |       | kafka消费组     |
+| Property key                | Required | Default value | Optional value | Description           |
+|-----------------------------|----------|---------------|----------------|-----------------------|
+| connector.bootstrap.servers | Yes      |               |                | kafka cluster address |
+| connector.topic             | Yes      |               |                | topic to read         |
+| connector.group.id          | Yes      |               |                | kafka consumer group  |
 
-<b>2. kafka起始消费属性</b>
+<b>2. Where to start consuming</b>
 
-| 属性key                        | 属性是否必需 | 属性默认值         | 属性可选值                                                                                                                                                                                                                                                                                                          | 属性说明                                                                                                       |
-|------------------------------|--------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
-| connector.startup-mode       | 否      | group-offsets | 1. `ealiest-offset`: 从partition的最早offset开始消费<br>2. `latest-offset`: 从partition的最新offset开始消费<br>3. `group-offsets`: 设置从当前consumer group的offset开始消费<br>4. `specific-offsets`: 指定各个partition的起始消费offset，配合connector.specific-offsets使用<br>5. `specific-timestamp`: 指定消费某个时间点后的数据，配合connector.specific-timestamp使用 | 决定kafka从何处开始消费                                                                                             |
-| connector.specific-offsets   | 否      |               |                                                                                                                                                                                                                                                                                                                | 配合specific-offsets使用，格式为标准json字符串，例如:<br>```[{"partition":1,"offset":100},{"partition":2,"offset":200}]``` |
-| connector.specific-timestamp | 否      |               |                                                                                                                                                                                                                                                                                                                | 配合specific-timestamp使用，指定KafkaConsumer的消费起始时间戳，单位ms                                                        |
+| Property key                 | Is necessary | Default value | Optional value                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Description                                                                                                                                            |
+|------------------------------|--------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| connector.startup-mode       | No           | group-offsets | 1. `ealiest-offset`: Consume from the earliest offset of the partition<br>2. `latest-offset`: Consume from the latest offset of the partition<br>3. `group-offsets`: Comsume from the offset of the current consumer group<br>4. `specific-offsets`: Specify the offset for each partition, cooperate with `connector.specific-offsets`<br>5. `specific-timestamp`: Consume messages after a certain point in time, cooperate with `connector.specific-timestamp` | Decide from which offsets to consume                                                                                                                   |
+| connector.specific-offsets   | No           |               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Used with specific-offsets, the format is a standard json string.<br>For example:<br>```[{"partition":1,"offset":100},{"partition":2,"offset":200}]``` |
+| connector.specific-timestamp | No           |               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Used with specific-timestamp (ms) to specify the offset to consume                                                                                     |
 
-<b>3. 其他FlinkKafkaConsumer参数</b>
+<b>3. Other FlinkKafkaConsumer parameters</b>
 
-FlinkKafkaConsumer支持许多参数，详情可参考<a href="https://kafka.apache.org/21/javadoc/?org/apache/kafka/clients/consumer/ConsumerConfig.html">ConsumerConfig(2.1.0) API]</a>。
 
-若用户需要设置这些参数，可通过此 connector.XXX 来进行配置。
-例如，若要设置MAX_PARTITION_FETCH_BYTES_CONFIG为1024，则添加参数：
+FlinkKafkaConsumer supports many parameters, please refer to <a href="https://kafka.apache.org/21/javadoc/?org/apache/kafka/clients/consumer/ConsumerConfig.html">ConsumerConfig(2.1.0) API]</a> for details .
+If the user needs to set these parameters, it can be configured through `connector.XXX`. 
+
+For example, to set MAX_PARTITION_FETCH_BYTES_CONFIG to 1024, add the parameter:
+
 
 ```json
 {
@@ -91,67 +94,68 @@ FlinkKafkaConsumer支持许多参数，详情可参考<a href="https://kafka.apa
 }
 ```
 
-#### debug参数
+#### Parameters for debugging
 
-Kafka读连接器用于流式场景，正常情况下会一直消费。若用户想通过只消费有限数量的数据进行debug，则可通过以下参数进行配置。注意这些参数需要添加`job.reader`前缀。 
-
-
-| 参数名                           | 参数是否必需 | 参数默认值 | 参数说明                                                                   |
-|-------------------------------|--------|-------|------------------------------------------------------------------------|
-| enable_count_mode             | 否      | false | 是否在发送一段数据后结束当前任务，一般用于测试                                                |
-| count_mode_record_threshold   | 否      | 10000 | 若enable_count_mode=true，则在kafka消费count_mode_record_threshold条数据后结束当前任务 |
-| count_mode_run_time_threshold | 否      | 600   | 若enable_count_mode=true，则在任务运行count_mode_record_threshold秒后结束当前任务      |
+The Kafka read connector is used in streaming scenarios and will be consumed all the time under normal circumstances. 
+If the user wants to debug by consuming only a limited amount of data, the following parameters can be configured. Note that these parameters need to be added to `job.reader` block.
 
 
-### 支持的消息解析模式
+| Property key | Is necessary | Default value  | Description |
+| ------ | ---------- | ------- | ---- |
+| enable_count_mode | No | false | Whether to end the current task after sending a piece of data, generally used for testing |
+| count_mode_record_threshold| No | 10000 | If `enable_count_mode=true`, the current task ends after consuming `count_mode_record_threshold` pieces of messages |
+|count_mode_run_time_threshold| No | 600 | If `enable_count_mode=true`, end the current task after running `count_mode_record_threshold` seconds |
 
-从KafkaConsumer可以拉取到消息`ConsumerRecord`。 ***BitSail*** 支持两种对`ConsumerRecord`的处理方式。
-用户可通过参数`job.reader.format_type`决定使用哪种方式:
- - `job.reader.format_type="json"`: 按照json格式解析
-    - 在此模式下，***BitSail*** 按照用户设置的参数 `job.reader.columns` ，对ConsumerRecord中value代表的json格式字符串进行解析。
-    - 因此此模式下必需`job.reader.columns`参数
- - `job.reader.format_type="streaming_file"`: 不解析
-    - 在此模式下，会直接将ConsumerRecord中的信息传出，具体结构如下:
-   
+
+### Supported message parsing modes
+
+Messages can be pulled from KafkaConsumer in format of ConsumerRecord. ***BitSail*** supports two ways to handle ConsumerRecordof. The user can use `job.reader.format` to decide which method to use.
+
+- `job.reader.format_type="json"`: Parse according to json format
+    - In this mode, ***BitSail*** parses the json format string represented by value in ConsumerRecord according to the parameters `job.reader.columns`  set by the user.
+    - Therefore, the parameters `job.reader.columns` is required in this mode
+- `job.reader.format_type="streaming_file"`: Use raw byte value
+    - In this mode, ***BitSail*** directly deliver the raw bytes value in ConsumerRecord. The specific structure is as follows:
+
 ```json
-    [
-   {"index":0, "name":"key", "type":"binary"},     // 消息key
-   {"index":1, "name":"value", "type":"binary"},   // 消息value
-   {"index":2, "name":"partition", "type":"string"}, // 消息来源partition
-   {"index":3, "name":"offset", "type":"long"}     // 消息在partition中的offset
-    ]
-```
+   [
+    {"index":0, "name":"key", "type":"binary"},     // message key
+    {"index":1, "name":"value", "type":"binary"},   // message value
+    {"index":2, "name":"partition", "type":"string"}, // partition of the message
+    {"index":3, "name":"offset", "type":"long"}     // offset of the meesage in partition
+   ]
+   ```
 
 
-## kafka写连接器
+## Kafka Writer
 
-### 参数配置
+### Parameters
 
-注意这些参数需要添加`job.writer`前缀。
+Note that these parameters should be added to `job.writer` block.
 
-#### 必需参数
+#### Necessary parameters
 
-| 参数名           | 参数默认值 | 参数说明                                                                                 |
-|---------------|-------|--------------------------------------------------------------------------------------|
-| class         |       | kafka写连接器类名，只能为`com.bytedance.bitsail.connector.legacy.kafka.sink.KafkaOutputFormat` |
-| kafka_servers |       | kafka的bootstrap server地址，多个bootstrap server地址由逗号 `','` 分隔                            |
-| topic_name    |       | 要写入的topic                                                                            |
-| columns       |       | 数据字段名称及字段类型                                                                          |
+| Param names   | Default value | Description                                                                                                 |
+|---------------|---------------|-------------------------------------------------------------------------------------------------------------|
+| class         |               | Writer class name of kafka connector, `com.bytedance.bitsail.connector.legacy.kafka.sink.KafkaOutputFormat` |
+| kafka_servers |               | Kafka's bootstrap server address, multiple bootstrap server addresses are separated by `','`                |
+| topic_name    |               | kafka topic                                                                                                 |
+| columns       |               | Describing fields' names and data types                                                                     |
 
-#### 可选参数
+#### Optional parameters
 
-| 参数名                    | 参数默认值 | 参数说明                                                                                                                                                   |
-|------------------------|-------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| writer_parallelism_num | -     | 写并发数                                                                                                                                                   |
-| partition_field        | -     | partition_field包含“job.writer.columns”中的一个或几个field，以逗号分隔（例如："id,timestamp"）。<br>若partition_field不为空，在发送数据到kafka topic时，会根据record中的这几个field的值决定写入哪个topic |
-| log_failures_only      | false | 在KafkaProducer执行异步send操作失败时:<br>1. 若log_failures_only=true，则只通过log.error发送失败信息<br>2. 若log_failures_only=false，则抛出异常                                    |
-| retries                | 10    | KafkaProducer的失败重试次数                                                                                                                                   |
-| retry_backoff_ms       | 1000  | KafkaProducer的失败重试间隔，单位ms                                                                                                                              |
-| linger_ms              | 5000  | KafkaProducer创建单个batch的最大等待时间，单位ms                                                                                                                     |
+| Param names            | Default value | Description                                                                                                                                                                                                                                                                                   |
+|------------------------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| writer_parallelism_num |               | writer parallelism num                                                                                                                                                                                                                                                                        |
+| partition_field        |               | `partition_field` contains one or several fields from `job.writer.columns`, separated by commas (<i>e.g.</i> "id,timestamp"). If partition_field is not empty, when sending data to kafka topic, it will decide which topic to write based on the hash values ​​of these fields in the record |
+| log_failures_only      | false         | When KafkaProducer fails to perform an asynchronous send operation:<br> 1. If `log_failures_only=true`, only log failure information<br> 2. If `log_failures_only=false`, throw an exception                                                                                                  |
+| retries                | 10            | Number of failed retries for KafkaProducer                                                                                                                                                                                                                                                    |
+| retry_backoff_ms       | 1000          | KafkaProducer's failure retry interval (ms)                                                                                                                                                                                                                                                   |
+| linger_ms              | 5000          | The maximum waiting time (ms) for KafkaProducer to create a single batch                                                                                                                                                                                                                      |
 
-#### 其他参数
+#### Other parameters
 
-在初始化KafkaProducer时，用户可通过参数 `job.common.optional` 传入指定的初始化参数，示例如下:
+When initializing the KafkaProducer, the user can use `job.common.optional` to pass initialization parameters, for example:
 
 ```json
 {
@@ -168,9 +172,11 @@ Kafka读连接器用于流式场景，正常情况下会一直消费。若用户
 
 ----
 
-## 相关文档
 
-配置示例文档 [kafka连接器示例](./kafka-example.md)
+## Related document
+
+Configuration examples: [kafka-connector-example](./kafka-example.md)
+
 
 
 

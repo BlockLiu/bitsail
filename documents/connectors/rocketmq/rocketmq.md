@@ -1,13 +1,13 @@
 # RocketMQ connector
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 ***BitSail*** RocketMQ connector supports writing in batch mode.
 
 
 ## Maven dependency
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>bitsail-connector-rocketmq</artifactId>

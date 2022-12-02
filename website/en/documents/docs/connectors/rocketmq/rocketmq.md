@@ -1,11 +1,11 @@
-# RocketMQ连接器
+# RocketMQ connector
 
-上级文档: [connectors](../../../connectors.md)
+Parent document: [connectors](../../../connectors.md)
 
-***BitSail*** RocketMQ连接器支持写指定的RocketMQ topic。
+***BitSail*** RocketMQ connector supports writing in batch mode.
 
 
-## 依赖引入
+## Maven dependency
 
 ```xml
 <dependency>
@@ -15,20 +15,20 @@
 </dependency>
 ```
 
-## RocketMQ写入
+## RocketMQ writer
 
-### 支持数据类型
+### Supported data types
 
-- int, bigint
-- float, double, decimal
-- timestamp, date
-- string, char
-- boolean
-- binary
+ - int, bigint
+ - float, double, decimal
+ - timestamp, date
+ - string, char
+ - boolean
+ - binary
 
-### 主要参数
+### Parameters
 
-写连接器参数在`job.writer`中配置，实际使用时请注意路径前缀。示例:
+The following mentioned parameters should be added to `job.writer` block when using, for example:
 
 ```json
 {
@@ -43,35 +43,35 @@
 }
 ```
 
-#### 必需参数
+#### Necessary parameters
 
-| 参数名称              | 是否必填 | 参数枚举值 | 参数含义                                                                                      |
-|:------------------|:-----|:------|:------------------------------------------------------------------------------------------|
-| class             | 是  |       | RocketMQ写连接器类型, `com.bytedance.bitsail.connector.legacy.rocketmq.sink.RocketMQOutputFormat` |
-| name_server_address   | 是  |       | RocketMQ的name server地址 |
-| topic        | 是  |       | 要写入的topic |
-|columns| 是 | | 指定写入的字段名和字段类型 |
+| Param name                   | Required | Optional value | Description                                                                                                    |
+|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
+| class             | Yes  |       | Class name of RocketMQ writer, `com.bytedance.bitsail.connector.legacy.rocketmq.sink.RocketMQOutputFormat` |
+| name_server_address   | Yes  |       | Name server address of rocketmq |
+| topic        | Yes  |       | Topic to write |
+|columns| Yes | | Describing fields' names and types |
 
 
 
-#### 可选参数
+#### Optional parameters
 
-| 参数名称                                    | 是否必填  | 参数枚举值 | 参数含义                                                 |
-|:----------------------------------------|:------|:------|:-----------------------------------------------------|
-| writer_parallelism_num | 否       |                | 指定RocketMQ写并发  |
-| producer_group | 否 | | 任务的生产组。若不指定，则为一随机字符串 |
-| tag | 否 | | 生产消息的tag | 
-| enable_batch_flush | 否 | | 是否开启batch发送。默认 true |
-| batch_size | 否 | | Batch发送的数量，默认100 |
-| log_failures_only | 否 | | 当send出错时:<br/>1. true: 仅日志打印错误<br/>2. false: 抛出异常<br/>默认 false |
-| enable_sync_send | 否 | | 是否使用同步发送。默认 false |
-| access_key | 否 | | 用于鉴权的Access key |
-| secret_key | 否 | | 用于鉴权的Secret key  |
-| send_failure_retry_times | 否 | | 最大失败重试次数, 默认 3 |
-| send_message_timeout_ms | 否 | | 消息发送的最大超时, 默认 3000 ms |
-| max_message_size_bytes | 否 | | 最大消息体积, 默认 4194304 bytes |
-| key | 否 | | 指定column中的一个或几个字段作为消息的key |
-| partition_fields | 否 | | 指定column中的一个或几个字段用于选择消息发送到的queue  |
+| Param name             | Required | Optional value | Description                                                           |
+|:-----------------------|:---------|:---------------|:----------------------------------------------------------------------|
+| writer_parallelism_num | No       |                | Writer parallelism num |
+| producer_group | No | | Producer group for the task. If not defined, it will use a random string |
+| tag | No | | Tags of the produced messages | 
+| enable_batch_flush | No | | true: send a batch of messages at once;<br/>false: send single message at once.<br/> Default true. |
+| batch_size | No | | The number of messages to send in a batch. Default 100 |
+| log_failures_only | No | | When send failure happens, it will:<br/>true: only log this failure,<br/>false: throw exception.<br/>Default false. |
+| enable_sync_send | No | | If use sync send. Default false. |
+| access_key | No | | Access key for authorization. |
+| secret_key | No | | Secret key for authorization. |
+| send_failure_retry_times | No | | Max retry times for a send failure, default 3 |
+| send_message_timeout_ms | No | | Timeout for sending a message, default 3000 ms |
+| max_message_size_bytes | No | | Max message size, default 4194304 bytes |
+| key | No | | Specify which field(s) is used as the message key.|
+| partition_fields | No | | Specify which field(s) is used to select queue. |
 
 
 
@@ -79,4 +79,4 @@
 ## Related document
 
 
-配置示例文档: [rocketmq-connector-example](./rocketmq-example.md)
+Configuration examples: [rocketmq-connector-example](./rocketmq-example.md)

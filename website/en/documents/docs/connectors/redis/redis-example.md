@@ -1,11 +1,13 @@
-# Redis连接器配置示例
+# Redis connector examples
 
 Parent document: [redis-connector](./redis.md)
 
 
-## Redis写连接器
+## Redis Writer example
 
-假设在本地起了一个端口为6379的Redis。用于写入该Redis的配置如下:
+Suppose we start a local Redis with port 6379.
+
+Configuration for writing the Redis cluster is:
 
 ```json
 {

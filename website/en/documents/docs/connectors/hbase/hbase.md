@@ -1,14 +1,14 @@
-# HBase连接器
+# HBase connector
 
-上级文档: [connectors](../../../connectors.md)
+Parent document: [connectors](../../../connectors.md)
 
-***Bitsail*** HBase连接器可用于支持读写HBase，支持的主要功能如下:
+***Bitsail*** HBase can be used to read and write HBase tables.
+The main function points are as follows:
 
-- 支持scan方式读取 HBase table 中的数据
-- 支持在写 HBase table 时根据列数据设置 RowKey
+ - Support scanning HBase tables.
+ - Support set RowKey while writing HBase tables.
 
-
-## 依赖引入
+## Maven dependency
 
 ```xml
 <dependency>
@@ -18,11 +18,12 @@
 </dependency>
 ```
 
-## HBase读连接器
+## HBase reader
 
-### 支持数据类型
+### Supported data types
 
-支持将HBase中的binary数据转化为如下格式：
+
+HBase reader supports transform binary data from HBase into following formats of data:
 
 - string
 - boolean
@@ -37,9 +38,9 @@
 
 
 
-### 参数
+### Parameters
 
-读连接器参数在`job.reader`中配置，实际使用时请注意路径前缀。示例:
+The following mentioned parameters should be added to `job.reader` block when using, for example:
 
 ```json
 {
@@ -69,28 +70,30 @@
 }
 ```
 
-#### 必需参数
+#### Necessary parameters
 
-| 参数名称                  | 是否必须 | 参数枚举值 | 参数描述                                                                                                    |
+
+| Param name                   | Required | Optional value | Description                                                                                                    |
 |:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
-| class                        | 是      |                | HBase读连接器名, `com.bytedance.bitsail.connector.legacy.hbase.source.HBaseInputFormat` |
-| table | 是 |  | 要读取的HBase表名 | 
-| columns | 是 | | 描述字段名称和字段类型。字段名格式为: `columnFamily:columnName`. |
-| hbase_conf | 是 | | 用于创建HBase连接的配置。 |
+| class                        | Yes     |                | HBase reader class name, `com.bytedance.bitsail.connector.legacy.hbase.source.HBaseInputFormat` |
+| table | Yes |  | Target HBase table to read. | 
+| columns | Yes | | Describing fields' names and types. The format should be: `columnFamily:columnName`. |
+| hbase_conf | Yes | | Configurations for creating HBase connection. |
 
 
-#### 可选参数
+#### Optional parameters
 
-| 参数名称                  | 是否必须 | 参数枚举值 | 参数描述                                                                                                    |
-|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
-| reader_parallelism_num | 否       |                | 读并发                                               |
-| encoding | 否 | | 处理HBase中的binary数据时使用的编码方式。默认为utf-8.|
+| Param name             | Required | Optional value | Description                                                           |
+|:-----------------------|:---------|:---------------|:----------------------------------------------------------------------|
+| reader_parallelism_num | No       |                | Read parallelism num                                                  |
+| encoding | No | | The encoding style when decoding binary data from HBase. Default utf-8. |
 
-## HBase写连接器
 
-### 支持数据类型
+## HBase writer
 
-支持将以下数据类型转化为bytes后写入HBase:
+### Supported data types
+
+HBase writer supports transform the following formats of data into binary data:
 
 - varchar
 - string
@@ -106,9 +109,9 @@
 - timestamp
 - binary
 
-### 参数
+### Parameters
 
-读连接器参数在`job.writer`中配置，实际使用时请注意路径前缀。示例:
+The following mentioned parameters should be added to `job.writer` block when using, for example:
 
 ```json
 {
@@ -138,49 +141,49 @@
 }
 ```
 
-#### 必需参数
+#### Necessary parameters
 
-| 参数名称                  | 是否必须 | 参数枚举值 | 参数描述                                                                                                    |
+| Param name                   | Required | Optional value | Description                                                                                                    |
 |:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
-| class                        | 是      |                | HBase写连接器名, `com.bytedance.bitsail.connector.legacy.hbase.sink.HBaseOutputFormat` |
-| table | 是 |  | 要写入的HBase表名 | 
-| columns | 是 | | 描述字段名称和字段类型。字段名格式为: `columnFamily:columnName`. |
-| hbase_conf | 是 | | 用于创建HBase连接的配置。 |
-| row_key_column | 是 | | 用于指定写入列的RowKey |
+| class                        | Yes      |                | HBase writer class name, `com.bytedance.bitsail.connector.legacy.hbase.sink.HBaseOutputFormat` |
+| table | Yes |  | Target table to write. | 
+| columns | Yes | | Describing fields' names and types. The format should be: `columnFamily:columnName`. |
+| hbase_conf | Yes | | Configurations for creating HBase connection. |
+| row_key_column | Yes | | Determine the RowKey for each row. |
 
-row_key_column的格式说明如下:
- - `$(XX)` 表示使用columns中定义的XX列的值来填充
- - `md5(...)` 表示对括号中的内容进行md5计算
+The format of `row_key_column` is as follows:
+- `$(XX)` means using the value of `XX` defined in `columns`.
+- `md5(...)` means the md5 operation.
 
-例如: `$(cf:name)_md5($(cf:id)_split_$(cf:age))`
+For example: `$(cf:name)_md5($(cf:id)_split_$(cf:age))`
 
-#### 可选参数
+#### Optional parameters
 
-| 参数名称                  | 是否必须 | 参数枚举值 | 参数描述                                                                                                    |
-|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
-| writer_parallelism_num | 否       |                | 写并发,最大不超过表的region数量。                                              |
-| encoding | 否 | | 将数据转化为bytes时使用的编码方式。默认为utf-8.|
-| null_mode | 否 | | 遇到null数据时的处理方式。<br/>"skip"表示跳过此数据, "empty"表示置为空的bytes。<br/> 默认为"empty".|
-| wal_flag| 否 | |  是否使用Write-ahead logging。默认false。|
-| write_buffer_size | 否 | | mutate操作的buffer大小。默认8MB。 |
-| version_column | 否  | | 决定写入数据的时间戳。|
+| Param name             | Required | Optional value | Description                                                           |
+|:-----------------------|:---------|:---------------|:----------------------------------------------------------------------|
+| writer_parallelism_num | No       |                | Writer parallelism num. No larger than the region number of table.                                                  |
+| encoding | No | | The encoding style when encoding data. Default utf-8. |
+| null_mode | No | | How to process null value. <br/>"skip" means this value will not be inserted.<br/>"empty" means set the row to empty bytes.<br/>Default "empty". |
+| wal_flag| No | |  If enable Write-ahead logging. Default false.|
+| write_buffer_size | No | | The buffer size of mutate operation. Default 8MB. |
+| version_column | No  | | Determine the timestamp of inserted rows.|
 
-version_column的使用说明如下:
- 
- - 若不设置此选项，则默认以运行时间作为写入时间戳。
- - 若设置为 `{"index":x}`，则使用第 x 列的值（需要能转化为整型时间戳）作为写入时间戳。例如:
-    ```json
-      {
-        "version_column": {
-            "index": 1      // 表示使用第1列的值作为时间戳（从0开始）
-        }
-      }
-    ```
-- 若设置为 `{"value":xxx}`或者`{"value":"xxx"}`，则固定使用XXX（需要能转化为整型时间戳）作为写入时间戳。例如:
+The usage of version_column is as follow:
+
+- If not set, use the runtime timestamp as cells' timestamp.
+- If `"version_column" = {"index":x}`, then use the value of the x-th (begin from 0) column as cells' timestamp. For example:
+   ```json
+     {
+       "version_column": {
+           "index": 1      // Use the second column defined in `job.writer.columns`
+       }
+     }
+   ```
+- If `"version_column" = {"value":xxx}` or `"version_column" = {"value":"xxx"}`, then use the give value as cells' timestamp. For example:
   ```json
     {
       "version_column": {
-          "value": "1234567890"       // 写入时间戳固定为1234567890
+          "value": "1234567890"       // Cells' timestamp: 1234567890
       }
     }
   ```
@@ -188,6 +191,6 @@ version_column的使用说明如下:
 
 
 
-## 相关文档
+## Related document
 
-配置示例文档: [hbase-connector-example](./hbase-example.md)
+Configuration examples: [hbase-connector-example](./hbase-example.md)

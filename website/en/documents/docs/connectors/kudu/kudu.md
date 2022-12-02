@@ -1,10 +1,10 @@
-# Kudu连接器
+# Kudu connector
 
-上级文档: [connectors](../../../connectors.md)
+Parent document: [connectors](../../../connectors.md)
 
-***BitSail*** Kudu连接器支持批式读写Kudu表。
+***BitSail*** Kudu connector supports reading and writing kudu tables.
 
-## 依赖引入
+## Maven dependency
 
 ```xml
 <dependency>
@@ -16,20 +16,20 @@
 
 -----
 
-## Kudu读取
+## Kudu Reader
 
-Kudu通过scanner扫描数据表，支持常见的Kudu数据类型:
+Kudu reader us scanner to read table, supporting common Kudu data types:
 
-- 整型: `int8, int16, int32, int64`'
-- 浮点类型: `float, double, decimal`
-- 布尔类型: `boolean`
-- 日期类型: `date, timestamp`
-- 字符类型: `string, varchar`
-- 二进制类型: `binary, string_utf8`
+- Integer: `int8, int16, int32, int64`'
+- Float number: `float, double, decimal`
+- Bool: `boolean`
+- Date & Time: `date, timestamp`
+- String: `string, varchar`
+- Binary: `binary, string_utf8`
 
-### 主要参数
+### Parameters
 
-读连接器参数在`job.reader`中配置，实际使用时请注意路径前缀。示例:
+The following mentioned parameters should be added to `job.reader` block when using, for example:
 
 ```json
 {
@@ -43,87 +43,92 @@ Kudu通过scanner扫描数据表，支持常见的Kudu数据类型:
 }
 ```
 
-#### 必需参数
+#### Necessary parameters
 
-| 参数名称              | 是否必填 | 参数枚举值 | 参数含义                                                                                      |
-|:------------------|:-----|:------|:------------------------------------------------------------------------------------------|
-| class             | 是  |       | Kudu读连接器类型, `com.bytedance.bitsail.connector.kudu.source.KuduSource` |
-| kudu_table_name | 是 | | 要读取的Kudu表 |
-| kudu_master_address_list | 是 | | Kudu master地址, List形式表示 |
-| columns | 是 | | 要读取的数据列的列名和类型 |
-| reader_parallelism_num | 否 | | 读并发 |
-
-
-#### KuduClient相关参数
-
-| 参数名称              | 是否必填 | 参数枚举值 | 参数含义                                                                                      |
-|:------------------|:-----|:------|:------------------------------------------------------------------------------------------|
-| kudu_admin_operation_timeout_ms | 否 | | Kudu client进行admin操作的timeout, 单位ms, 默认30000ms |
-| kudu_operation_timeout_ms | 否 | | Kudu client普通操作的timeout, 单位ms, 默认30000ms |
-| kudu_connection_negotiation_timeout_ms | 否  | |  单位ms，默认10000ms |
-| kudu_disable_client_statistics | 否  | | 是否启用client段statistics统计 |
-| kudu_worker_count | 否 | | client内worker数量 | 
-| sasl_protocol_name | 否 | | 默认 "kudu" |
-| require_authentication | 否  | | 是否开启鉴权 |
-| encryption_policy | 否 | OPTIONAL<br/>REQUIRED_REMOTE<br/>REQUIRED | 加密策略 | 
+| Param name                   | Required | Optional value | Description                                                                                                    |
+|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
+| class             | yes  |       | Kudu reader's class name, `com.bytedance.bitsail.connector.kudu.source.KuduSource` |
+| kudu_table_name | yes | | Kudu table to read |
+| kudu_master_address_list | yes | | Kudu master addresses in list format |
+| columns | yes | | The name and type of columns to read |
+| reader_parallelism_num | no | | reader parallelism |
 
 
-#### KuduScanner相关参数
-| 参数名称              | 是否必填 | 参数枚举值 | 参数含义                                                                                      |
-|:------------------|:-----|:------|:------------------------------------------------------------------------------------------|
-| read_mode | 否 | READ_LATEST<br/>READ_AT_SNAPSHOT | 读取模式 |
-| snapshot_timestamp_us | read_mode=READ_AT_SNAPSHOT时必需 |  | 指定要读取哪个时间点的snapshot |
-| enable_fault_tolerant | 否 | | 是否允许fault tolerant |
-| scan_batch_size_bytes | 否 | | 单batch内拉取的最大数据量 |
-| scan_max_count | 否 | | 最多拉取多少条数据 |
-| enable_cache_blocks| 否 |  | 是否启用cache blocks, 默认true |
-| scan_timeout_ms | 否 | | scan超时时间, 单位ms, 默认30000ms |
-| scan_keep_alive_period_ms | 否 | | |
+#### KuduClient related parameters
 
-#### 分片相关参数
-| 参数名称              | 是否必填 | 参数枚举值 | 参数含义                                                                                      |
-|:------------------|:-----|:------|:------------------------------------------------------------------------------------------|
-| split_strategy | 否 | SIMPLE_DIVIDE | 分片策略, 目前只支持 SIMPLE_DIVIDE |
-| split_config | 是 | | 各个分片策略对应的配置 |
+| Param name                   | Required | Optional value | Description                                                                                                    |
+|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
+| kudu_admin_operation_timeout_ms | no | | Kudu client admin operation's  timeout. Unit is ms, default 30000ms |
+| kudu_operation_timeout_ms | no | | Kudu client operation's timeout. Unit is ms, default 30000ms |
+| kudu_connection_negotiation_timeout_ms | no  | |  Unit is ms，default 10000ms |
+| kudu_disable_client_statistics | no  | | If to enable statistics in kudu client |
+| kudu_worker_count | no | | client worker number. | 
+| sasl_protocol_name | no | | Default "kudu" |
+| require_authentication | no  | | If to enable authentication. |
+| encryption_policy | no | OPTIONAL<br/>REQUIRED_REMOTE<br/>REQUIRED | encryption polocy. | 
 
-##### SIMPLE_DIVIDE分片策略
-SIMPLE_DIVIDE对应的split_config格式如下:
+
+#### KuduScanner related parameters
+
+| Param name                   | Required | Optional value | Description                                                                                                    |
+|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
+| read_mode | no | READ_LATEST<br/>READ_AT_SNAPSHOT | read mode |
+| snapshot_timestamp_us | yes if read_mode=READ_AT_SNAPSHOT |  | specify which snapshot to read |
+| enable_fault_tolerant | no | | If to enable fault tolerant |
+| scan_batch_size_bytes | no | | Max bytes number in single batch |
+| scan_max_count | no | | Max number of rows to scan |
+| enable_cache_blocks| no |  | If to enable cache blocks, default true |
+| scan_timeout_ms | no | | scan timeout. Unit is ms, default 30000ms |
+| scan_keep_alive_period_ms | no | | |
+
+#### Split related parameters
+
+| Param name                   | Required | Optional value | Description                                                                                                    |
+|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
+| split_strategy | no | SIMPLE_DIVIDE | Split strategy. Only support SIMPLE_DIVIDE now. |
+| split_config | yes | | Split configuration for each strategy. |
+
+##### SIMPLE_DIVIDE split strategy 
+SIMPLE_DIVIDE strategy uses the following format of split_config:
 ```text
 "{\"name\": \"key\", \"lower_bound\": 0, \"upper_bound\": \"10000\", \"split_num\": 3}"
 ```
- - `name`: 用于分片的列(只能有一列), 只支持 int8, int16, int32, int64类型的列
- - `lower_bound`: 要读取列的最小值（若不设置, 则通过扫表获取）
- - `upper_bound`: 要读取列的最大值（若不设置, 则通过扫表获取）
- - `split_num`: 分片数量（若不设置，则与读并发一致）
+- `name`: the name of split column, only support int8, int16, int32, int64 type.
+- `lower_bound`: The min value of the split column (Scan table to get the min value if it is not set).
+- `upper_bound`: The max value of the split column (Scan table to get the max value if it is not set).
+- `split_num`: Number of split (Use the reader parallelism if it is not set).
 
-SIMPLE_DIVIDE分片策略将lower_bound和upper_bound之间的范围均分成split_num份，每一份即为一个分片。
+SIMPLE_DIVIDE strategy will evenly divide the range `[lower_bound, upper_bound]` into split_num sub ranges, and each range is a split.
+
 
 -----
 
-## Kudu写入
+## Kudu Writer
 
-### 支持的数据类型
+### Supported data type
 
-支持写入常见的Kudu数据类型:
-
-- 整型: `int8, int16, int32, int64`'
-- 浮点类型: `float, double, decimal`
-- 布尔类型: `boolean`
-- 日期类型: `date, timestamp`
-- 字符类型: `string, varchar`
-- 二进制类型: `binary, string_utf8`
-
-### 支持的操作类型
-
-支持以下操作类型:
- - INSERT, INSERT_IGNORE
- - UPSERT
- - UPDATE, UPDATE_IGNORE
+Support common Kudu data types:
 
 
-### 主要参数
+- Integer: `int8, int16, int32, int64`'
+- Float number: `float, double, decimal`
+- Bool: `boolean`
+- Date & Time: `date, timestamp`
+- String: `string, varchar`
+- Binary: `binary, string_utf8`
 
-写连接器参数在`job.writer`中配置，实际使用时请注意路径前缀。示例:
+### Supported operation type
+
+Support the following operations:
+
+- INSERT, INSERT_IGNORE
+- UPSERT
+- UPDATE, UPDATE_IGNORE
+
+
+### Parameters
+
+The following mentioned parameters should be added to `job.writer` block when using, for example:
 
 ```json
 {
@@ -139,42 +144,43 @@ SIMPLE_DIVIDE分片策略将lower_bound和upper_bound之间的范围均分成spl
 ```
 
 
-#### 必需参数
+#### Necessary parameters
 
-| 参数名称              | 是否必填 | 参数枚举值 | 参数含义                                                                                      |
-|:------------------|:-----|:------|:------------------------------------------------------------------------------------------|
-| class             | 是  |       | Kudu写连接器类型, `com.bytedance.bitsail.connector.kudu.sink.KuduSink` |
-| kudu_table_name | 是 | | 要写入的Kudu表 |
-| kudu_master_address_list | 是 | | Kudu master地址, List形式表示 |
-| columns | 是 | | 要写入的数据列的列名和类型 |
-| writer_parallelism_num | 否 | | 写并发 |
+| Param name                   | Required | Optional value | Description                                                                                                    |
+|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
+| class             | yes  |       | Kudu writer's class name, `com.bytedance.bitsail.connector.kudu.sink.KuduSink` |
+| kudu_table_name | yes | | Kudu table to write |
+| kudu_master_address_list | yes | | Kudu master addresses in list format |
+| columns | yes | | The name and type of columns to write |
+| writer_parallelism_num | no | | writer parallelism |
 
-#### KuduClient相关参数
+#### KuduClient related parameters
 
-| 参数名称              | 是否必填 | 参数枚举值 | 参数含义                                                                                      |
-|:------------------|:-----|:------|:------------------------------------------------------------------------------------------|
-| kudu_admin_operation_timeout_ms | 否 | | Kudu client进行admin操作的timeout, 单位ms, 默认30000ms |
-| kudu_operation_timeout_ms | 否 | | Kudu client普通操作的timeout, 单位ms, 默认30000ms |
-| kudu_connection_negotiation_timeout_ms | 否  | |  单位ms，默认10000ms |
-| kudu_disable_client_statistics | 否  | | 是否启用client段statistics统计 |
-| kudu_worker_count | 否 | | client内worker数量 | 
-| sasl_protocol_name | 否 | | 默认 "kudu" |
-| require_authentication | 否  | | 是否开启鉴权 |
-| encryption_policy | 否 | OPTIONAL<br/>REQUIRED_REMOTE<br/>REQUIRED | 加密策略 | 
+| Param name                   | Required | Optional value | Description                                                                                                    |
+|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
+| kudu_admin_operation_timeout_ms | no | | Kudu client admin operation's  timeout. Unit is ms, default 30000ms |
+| kudu_operation_timeout_ms | no | | Kudu client operation's timeout. Unit is ms, default 30000ms |
+| kudu_connection_negotiation_timeout_ms | no  | |  Unit is ms，default 10000ms |
+| kudu_disable_client_statistics | no  | | If to enable statistics in kudu client |
+| kudu_worker_count | no | | client worker number. | 
+| sasl_protocol_name | no | | Default "kudu" |
+| require_authentication | no  | | If to enable authentication. |
+| encryption_policy | no | OPTIONAL<br/>REQUIRED_REMOTE<br/>REQUIRED | encryption polocy. |
 
-#### KuduSession相关参数
-| 参数名称              | 是否必填 | 参数枚举值 | 参数含义                                                                                      |
-|:------------------|:-----|:------|:------------------------------------------------------------------------------------------|
-| kudu_session_flush_mode | 否 | AUTO_FLUSH_SYNC<br/>AUTO_FLUSH_BACKGROUND | session的flush模式, 默认AUTO_FLUSH_BACKGROUND |
-| kudu_mutation_buffer_size | 否 | | session最多能缓存多少条operation记录 |
-| kudu_session_flush_interval | 否 | | session的flush间隔，单位ms | 
-| kudu_session_timeout_ms | 否 | | session的operation超时 |
-| kudu_session_external_consistency_mode | 否 | CLIENT_PROPAGATED<br/>COMMIT_WAIT | 默认CLIENT_PROPAGATED |
-| kudu_ignore_duplicate_rows | 否 | | 是否忽略因duplicate key造成的error, 默认false |
+#### KuduSession related parameters
+
+| Param name                   | Required | Optional value | Description                                                                                                    |
+|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
+| kudu_session_flush_mode | no | AUTO_FLUSH_SYNC<br/>AUTO_FLUSH_BACKGROUND | Session's flush mode. Default AUTO_FLUSH_BACKGROUND |
+| kudu_mutation_buffer_size | no | | The number of operations that can be buffered |
+| kudu_session_flush_interval | no | | session flush interval，unit is ms | 
+| kudu_session_timeout_ms | no | | Timeout for operations. The default timeout is 0, which disables the timeout functionality. |
+| kudu_session_external_consistency_mode | no | CLIENT_PROPAGATED<br/>COMMIT_WAIT | External consistency mode for kudu session, default CLIENT_PROPAGATED |
+| kudu_ignore_duplicate_rows | no | | Whether ignore all the row errors if they are all of the AlreadyPresent type. Throw exceptions if false. Default false. |
 
 
 -----
 
-## 相关文档
+## Related document
 
-配置示例文档: [kudu-connector-example](./kudu-example.md)
+Configuration example: [kudu-connector-example](./kudu-example.md)

@@ -1,6 +1,6 @@
 # Redis connector
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 ***BitSail*** Redis connector supports writing Redis. The main function points are as follows:
 
@@ -10,7 +10,7 @@ Parent document: [connectors](../introduction.md)
 
 ## Maven dependency
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>bitsail-connector-redis</artifactId>

@@ -1,14 +1,14 @@
-# MongoDB连接器
+# MongoDB connector
 
-上级文档: [connectors](../../../connectors.md)
+Parent document: [connectors](../../../connectors.md)
 
-***BitSail*** MongoDB连接器支持读写Collections，主要功能点如下:
+***BitSail*** MongoDB connector supports reading and writing MongoDB. The main function points are as follows:
 
-- 支持批式读取Collection中文档
-- 支持批式写入Collection
+ - Support batch read documents from give collection. 
+ - Support batch write to target collection.
 
 
-## 依赖引入
+## Maven dependency
 
 ```xml
 <dependency>
@@ -18,27 +18,27 @@
 </dependency>
 ```
 
-## MongoDB读取
+## MongoDB Reader
 
-### 支持数据类型
+### Supported data types
 
-MongoDB读连接器根据字段映射进行解析，支持以下数据类型:
+MongoDB parse data according to schema. The following data types are supported:
 
-#### 基本数据类型
+#### Basic data type
 
- - string, character
- - boolean
- - short, int, long, float, double, bigint
- - date, time, timestamp
+- string, character
+- boolean
+- short, int, long, float, double, bigint
+- date, time, timestamp
 
-#### 复合数据类型
+#### Complex data type
 
- - array, list
- - map
+- array, list
+- map
 
-### 主要参数
+### Parameters
 
-写连接器参数在`job.reader`中配置，实际使用时请注意路径前缀。示例:
+The following mentioned parameters should be added to `job.reader` block when using, for example:
 
 ```json
 {
@@ -54,74 +54,79 @@ MongoDB读连接器根据字段映射进行解析，支持以下数据类型:
 }
 ```
 
-#### 必需参数
+#### Necessary parameters
 
-| 参数名称              | 是否必填 | 参数枚举值 | 参数含义                                                                                      |
-|:------------------|:-----|:------|:------------------------------------------------------------------------------------------|
-| class             | 是  |       | MongoDB读连接器类型, `com.bytedance.bitsail.connector.legacy.mongodb.sink.MongoDBInputFormat` |
-| db_name | 是 | | 要读取的database | 
-| collection_name| 是 | | 要读取的collection |
-| hosts_str |  | | MongoDB的连接地址，多个地址用逗号分隔 |
-| host | | | MongoDB的单个host | 
-| port | | | MongoDB的连接port |
-| split_pk | 是 | | 用于分片的字段 |
-
-- 注意，上述 (hosts_str) 和 (host, port) 二选一组合即可，优先使用hosts_str.
-- hosts_str格式为: `host1:port1,host2:port2,...`
-
-#### 可选参数
+| Param name                   | Required | Optional value | Description                                                                                                    |
+|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
+| class             | yes |       | Class name of MongoDB reader, `com.bytedance.bitsail.connector.legacy.mongodb.source.MongoDBInputFormat` |
+| db_name | Yes | | database to read| 
+| collection_name| yes| | collection to read |
+| hosts_str |  | | Address of MongoDB, multi addresses are separated by comma |
+| host | | | host of MongoDB |  
+| port | | | port of MongoDB |
+| split_pk | yes| | Field for splitting |
 
 
-| 参数名称                                    | 是否必填  | 参数枚举值 | 参数含义                                                 |
-|:----------------------------------------|:------|:------|:-----------------------------------------------------|
-| reader_parallelism_num | 否 |       | 指定MongoDB读并发                  |
-| user_name |  否 | | 用于鉴权的user name |
-| password | 否 | | 用于鉴权的password |
-| auth_db_name |  否 | | 用于鉴权的db名 |
-| reader_fetch_size | 否 | | 单次最多获取的文档数, 默认100000 |
-|  filter | 否 | | 过滤collection中的document |
+- Note, You need only set either (hosts_str) or (hosts_str).  (hosts_str) has higher priority.
+- Format of hosts_str: `host1:port1,host2:port2,...`
+
+
+#### Optional parameters
+
+| Param name             | Required | Optional value | Description                                                           |
+|:-----------------------|:---------|:---------------|:----------------------------------------------------------------------|
+| reader_parallelism_num | no |       | MongoDB reader parallelism num                  |
+| user_name |  no | | user name for authentication |
+| password | no | | password for authentication |
+| auth_db_name |  no | | db for authentication |
+| reader_fetch_size | no | | Max number of documents fetched once .Default 100000 |
+|  filter | no | | Filter for collections. |
 
 
 -----
 
-## MongoDB写入
+## MongoDB Writer
 
-### 支持数据类型
+### Supported data types
 
-MongoDB写连接器将用户定义的一行数据写入到一个document中，然后插入collection。
-支持的数据类型包括:
+MongoDB writer build a document for each record according to schema, and then insert it into collection.
 
-#### 基本数据类型
-
- - undefined
- - string
- - objectid
- - date
- - timestamp
- - bindata
- - bool
- - int
- - long
- - object
- - javascript
- - regex
- - double
- - decimal
-
-#### 复合数据类型
-
- - array
+Supported data types are:
 
 
-### 主要参数
+#### Basic data type
 
-写连接器参数在`job.writer`中配置，实际使用时请注意路径前缀。示例:
+- undefined
+- string
+- objectid
+- date
+- timestamp
+- bindata
+- bool
+- int
+- long
+- object
+- javascript
+- regex
+- double
+- decimal
+
+#### Complex data type
+
+- array
+
+
+### Parameters
+
+
+The following mentioned parameters should be added to `job.writer` block when using, for example:
+
 
 ```json
 {
   "job": {
     "writer": {
-      "class": "com.bytedance.bitsail.connector.legacy.mongodb.source.MongoDBOutputFormat",
+      "class": "com.bytedance.bitsail.connector.legacy.mongodb.sink.MongoDBOutputFormat",
       "unique_key": "id",
       "client_mode": "url",
       "mongo_url": "mongodb://localhost:1234/test_db",
@@ -144,39 +149,41 @@ MongoDB写连接器将用户定义的一行数据写入到一个document中，�
 }
 ```
 
-#### 必需参数
+#### Necessary parameters
 
-| 参数名称              | 是否必填 | 参数枚举值 | 参数含义                                                                                      |
-|:------------------|:-----|:------|:------------------------------------------------------------------------------------------|
-| class             | 是  |       | MongoDB写连接器类型, `com.bytedance.bitsail.connector.legacy.mongodb.sink.MongoDBOutputFormat` |
-| db_name | 是 | | 要写入的database | 
-| collection_name| 是 | | 要插入的collection |
-| client_mode | 是 | url<br/>host_without_credential<br/>host_with_credential | 指定如何创建mongo client |
-| url | 如果client_mode=url，则必需 | | MongoDB连接url, 例如 "mongodb://localhost:1234" |
-| mongo_hosts_str |  | | mongo连接地址，多个地址用逗号分隔 |
-| mongo_host | | | mongo单个连接地址 |
-| mongo_port | | | mongo单个连接端口 |
-| user_name | 如果client_mode=host_with_credential，则必需 | | 用于鉴权的user name |
-| password | 如果client_mode=host_with_credential，则必需 | | 用于鉴权的password |
+| Param name                   | Required | Optional value | Description                                                                                                    |
+|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
+| class             | yes |       | Class name for MongoDB writer, `com.bytedance.bitsail.connector.legacy.mongodb.sink.MongoDBOutputFormat` |
+| db_name | yes| | database to write | 
+| collection_name| yes| | collection to write |
+| client_mode | yes| url<br/>host_without_credential<br/>host_with_credential | how to create mongo client |
+| url | Yes if client_mode=url | | Url for connecting MongoDB, like "mongodb://localhost:1234" |
+| mongo_hosts_str |  | | Address of MongoDb, multi addresses are separated by comma |
+| mongo_host | | | host of MongoDB |  
+| mongo_port | | | port of MongoDB |
+| user_name | Yes if client_mode=host_with_credential | | user name  for authentication |
+| password | Yes if client_mode=host_with_credential| | password for authentication |
 
-- 注意，当client_mode为host_without_credential或者host_with_credential时，需要从上述 (mongo_hosts_str) 和 (mongo_host, mongo_port) 二选一组合进行设置，优先使用mongo_hosts_str.
-
-
-#### 可选参数
-
-| 参数名称                                    | 是否必填  | 参数枚举值 | 参数含义                                                 |
-|:----------------------------------------|:------|:------|:-----------------------------------------------------|
-| writer_parallelism_num | 否 |       | 指定redis写并发                       |
-| pre_sql | 否 | | 数据写入前执行的sql |
-| auth_db_name |  否 | | 用于鉴权的db名 |
-| batch_size | 否 | | 单次写入文档数, 默认100 |
-| unique_key | 否 | | 用于判断document是否唯一的字段 |
-|  connect_timeout_ms | 否 | | 连接超时，默认10000 ms |
-|  max_wait_time_ms | 否 | | 从连接池获取超时，默认120000 ms |
-|  socket_timeout_ms | 否 | | Socket超时，默认0不设置 | 
-| write_concern | 否 | 0, 1, 2, 3 | 数据写入保障级别, 默认为1 |
+- Note, when client_mode为host_without_credential or host_with_credential, you have to set either (mongo_hosts_str) or (mongo_host, mongo_port).
 
 
-## 相关文档
 
-配置示例文档: [mongodb-connector-example](./mongodb-example.md)
+#### Optional parameters
+
+| Param name             | Required | Optional value | Description                                                           |
+|:-----------------------|:---------|:---------------|:----------------------------------------------------------------------|
+| writer_parallelism_num | No       |                | Writer parallelism num                           |
+| pre_sql | no | | Sql executed before inserting collections. |
+| auth_db_name |  no | | db name for authentication |
+| batch_size | no | | Batch write number of documents, Default 100 |
+| unique_key | no | | Field for determining if document is unique |
+|  connect_timeout_ms | no | | connection timeout，default 10000 ms |
+|  max_wait_time_ms | no | | timeout when getting connection from connection pool，default 120000 ms |
+|  socket_timeout_ms | no | | socket timeout，default 0 (means infinity) | 
+| write_concern | no | 0, 1, 2, 3 | Data writing guarantee level, default 1 |
+
+
+## Related document
+
+
+Configuration examples: [mongodb-connector-example](./mongodb-example.md)

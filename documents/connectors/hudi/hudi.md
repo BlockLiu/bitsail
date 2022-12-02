@@ -1,6 +1,6 @@
 # Hudi connector
 
-Parent document: [connectors](../introduction.md)
+Parent document: [connectors](../../../connectors.md)
 
 The ***BitSail*** hudi connector supports reading and writing to hudi tables. The main function points are as follows:
 
@@ -14,7 +14,7 @@ The ***BitSail*** hudi connector supports reading and writing to hudi tables. Th
 
 ## Maven dependency
 
-```text
+```xml
 <dependency>
    <groupId>com.bytedance.bitsail</groupId>
    <artifactId>bitsail-connector-hudi</artifactId>

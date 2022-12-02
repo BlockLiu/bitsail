@@ -2,16 +2,16 @@
 
 -----
 
-父目录: [飞书表格连接器](./larksheet.md)
+Parent document: [larksheet-connector](./larksheet.md)
 
-## 读连接器示例
+## Reader example
 
-要读的表格如下
+The sheets to be read are:
 
-- [test_sheet_1](https://e4163pj5kq.feishu.cn/sheets/shtcnQmZNlZ9PjZUJKT5oU3Sjjg?sheet=ZbzDHq)
-- [test_sheet_2](https://e4163pj5kq.feishu.cn/sheets/shtcnQmZNlZ9PjZUJKT5oU3Sjjg?sheet=FJhAlN)
+ - [test_sheet_1](https://e4163pj5kq.feishu.cn/sheets/shtcnQmZNlZ9PjZUJKT5oU3Sjjg?sheet=ZbzDHq)
+ - [test_sheet_2](https://e4163pj5kq.feishu.cn/sheets/shtcnQmZNlZ9PjZUJKT5oU3Sjjg?sheet=FJhAlN)
 
-示例任务配置如下:
+Here is the example job configuration:
 
 ```json
 {

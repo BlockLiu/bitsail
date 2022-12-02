@@ -1,18 +1,18 @@
-# Hudi连接器
+# Hudi connector
 
-上级文档: [connectors](../../../connectors.md)
+Parent document: [connectors](../../../connectors.md)
 
-***BitSail*** hudi连接器支持读写hudi表，主要功能如下
+The ***BitSail*** hudi connector supports reading and writing to hudi tables. The main function points are as follows:
 
- - 支持流式写入Hudi表。
- - 支持批式写入Hudi表。
- - 支持批式读取Hudi表。
+ - Support streaming write to Hudi table.
+ - Support batch write to Hudi table.
+ - Support batch read from Hudi table.
 
-## 支持Hudi版本
+## Supported hudi versions
 
 - 0.11.1
 
-## 依赖引入
+## Maven dependency
 
 ```xml
 <dependency>
@@ -22,38 +22,38 @@
 </dependency>
 ```
 
-## Hudi读取
+## Hudi reader
 
-### 支持数据类型
-
-- 支持的基础数据类型如下:
-    - 整数类型:
-        - tinyint
-        - smallint
-        - int
-        - bigint
-    - 浮点类型:
-        - float
-        - double
-        - decimal
-    - 时间类型:
-        - timestamp
-        - date
-    - 字符类型:
-        - string
-        - varchar
-        - char
-    - 布尔类型:
-        - boolean
-    - 二进制类型:
-        - binary
-- 支持的复杂数据类型包括:
+### Supported data types
+- 
+- Basic Data types:
+  - Integer type:
+    - tinyint
+    - smallint
+    - int
+    - bigint
+  - Float type:
+      - float
+      - double
+      - decimal
+  - Time type:
+      - timestamp
+      - date
+  - String type:
+      - string
+      - varchar
+      - char
+  - Bool type:
+      - boolean
+  - Binary type:
+      - binary
+- Composited data types:
     - map
     - array
 
-### 主要参数
+### Parameters
 
-读连接器参数在`job.reader`中配置，实际使用时请注意路径前缀。示例:
+The following mentioned parameters should be added to `job.reader` block when using, for example:
 
 ```json
 {
@@ -76,53 +76,53 @@
 }
 ```
 
-#### 必需参数
+#### Necessary parameters
 
-| 参数名称                         | 是否必填 | 参数枚举值 | 参数描述                                                                                       |
-|:-----------------------------|:-----|:------|:-------------------------------------------------------------------------------------------|
-| class                        | Yes  |       | Hudi读连接器类名, `com.bytedance.bitsail.connector.legacy.hudi.dag.HudiSourceFunctionDAGBuilder` |
-| path                         | Yes  |       | 表的路径，可以是HDFS，S3，或者其他文件系统。                                                                  |
-| table.type                   | Yes  |       | Hudi表的类型，可以是 `MERGE_ON_READ` 或者 `COPY_ON_WRITE`                                            |
-| hoodie.datasource.query.type | Yes  |       | 查询类型，可以是 `snapshot` 最新视图 或者 `read_optimized` 读优化视图                                         | 
+| Param name                   | Required | Optional value | Description                                                                                                    |
+|:-----------------------------|:---------|:---------------|:---------------------------------------------------------------------------------------------------------------|
+| class                        | Yes      |                | Hudi read connector class name, `com.bytedance.bitsail.connector.legacy.hudi.dag.HudiSourceFunctionDAGBuilder` |
+| path                         | Yes      |                | the path of the table, could be HDFS, S3, or other file systems.                                               |
+| table.type                   | Yes      |                | The type of the Hudi table, MERGE_ON_READ or COPY_ON_WRITE                                                     |
+| hoodie.datasource.query.type | Yes      |                | Query type, could be `snapshot` or `read_optimized`                                                            | 
 
 
-#### 可选参数
+#### Optional parameters
 
-| 参数名称                   | 是否必填 | 参数枚举值 | 参数描述  |
-|:-----------------------|:-----|:------|:------|
-| reader_parallelism_num | No   |       | 读取并发度 |
+| Param name             | Required | Optional value | Description                                                           |
+|:-----------------------|:---------|:---------------|:----------------------------------------------------------------------|
+| reader_parallelism_num | No       |                | Read parallelism num                                                  |
 
-## Hudi写入
+## Hudi writer
 
-### 支持数据类型
-- 支持的基础数据类型如下:
-    - 整数类型:
+### Supported data type
+- Basic data types supported:
+    - Integer type:
         - tinyint
         - smallint
         - int
         - bigint
-    - 浮点类型:
+    - Float type:
         - float
         - double
         - decimal
-    - 时间类型:
+    - Time type:
         - timestamp
         - date
-    - 字符类型:
+    - String type:
         - string
         - varchar
         - char
-    - 布尔类型:
+    - Bool type:
         - boolean
-    - 二进制类型:
+    - Binary type:
         - binary
-- 支持的复杂数据类型包括:
+- Composited data types supported:
     - map
     - array
 
-### 主要参数
+### Parameters
 
-写连接器参数在`job.writer`中配置，实际使用时请注意路径前缀。示例:
+The following mentioned parameters should be added to `job.writer` block when using, for example:
 
 ```json
 {
@@ -168,36 +168,36 @@
 }
 ```
 
-#### 必需参数
+#### Necessary parameters
 
-| 参数名称              | 是否必填 | 参数枚举值 | 参数含义                                                                                      |
-|:------------------|:-----|:------|:------------------------------------------------------------------------------------------|
-| class             | Yes  |       | Hudi写连接器类型, `com.bytedance.bitsail.connector.legacy.hudi.sink.HudiSinkFunctionDAGBuilder` |
-| write.operation   | Yes  |       | `upsert` `insert` `bulk_insert`                                                           |
-| table.type        | Yes  |       | Hudi表类型，`MERGE_ON_READ`或者 `COPY_ON_WRITE`                                                 |
-| path              | Yes  |       | 表的路径，可以是HDFS，S3，或者其他文件系统。 如果该路径没有Hudi表，则会创建一张新表。                                          |
-| format_type       | Yes  |       | 输入的数据类型，当前支持 `json`                                                                       |
-| source_schema     | Yes  |       | 用于解析输入数据的字段类型。                                                                            |
-| sink_schema       | Yes  |       | 用于写入Hudi表的字段类型。                                                                           |
-| hoodie.table.name | Yes  |       | Hudi表的名字。                                                                                 |
+| Param name        | Is necessary | Optional value | Description                                                                                                                  |
+|:------------------|:-------------|:---------------|:-----------------------------------------------------------------------------------------------------------------------------|
+| class             | Yes          |                | Hudi write class name, `com.bytedance.bitsail.connector.legacy.hudi.sink.HudiSinkFunctionDAGBuilder`                         |
+| write.operation   | Yes          |                | `upsert` `insert` `bulk_insert`                                                                                              |
+| table.type        | Yes          |                | `MERGE_ON_READ` `COPY_ON_WRITE`                                                                                              |
+| path              | Yes          |                | path to the Hudi table, could be HDFS, S3, or other file system. If path not exists, the table will be created on this path. |
+| format_type       | Yes          |                | format of the input data source, currently only support `json`                                                               |
+| source_schema     | Yes          |                | schema used to deserialize source data.                                                                                      |
+| sink_schema       | Yes          |                | schema used to write hoodie data                                                                                             |
+| hoodie.table.name | Yes          |                | the name of the hoodie table                                                                                                 |
 
 
-#### 可选参数
+#### Optional parameters
 
-如需了解更多Hudi的高级参数, 请查看代码 `FlinkOptions.java`
+For more advance parameter, please checkout `FlinkOptions.java` class.
 
-| 参数名称                                    | 是否必填  | 参数枚举值 | 参数含义                                                 |
-|:----------------------------------------|:------|:------|:-----------------------------------------------------|
-| hoodie.datasource.write.recordkey.field | false |       | 对于 `upsert` 操作, 此参数用于指定主键字段.                         |
-| index.type                              | false |       | 对于 `upsert` 操作, 此参数用于指定索引类型. 可以是 `STATE` 或者 `BUCKET` |
-| hoodie.bucket.index.num.buckets         | false |       | 如果我们使用了BUCKET索引, 我们需要指定桶的数量。                         |
-| hoodie.bucket.index.hash.field          | false |       | 如果我们使用了BUCKET索引, 我们需要指定用于计算桶ID的字段。                   |
+| Param name                              | Is necessary | Optional value        | Description                                                                            |
+|:----------------------------------------|:-------------|:----------------------|:---------------------------------------------------------------------------------------|
+| hoodie.datasource.write.recordkey.field | false        |                       | For `upsert` operation, we need to define the primary key.                             |
+| index.type                              | false        |                       | For `upsert` operation, we need to define the index type. could be `STATE` or `BUCKET` |
+| hoodie.bucket.index.num.buckets         | false        |                       | If we use Bucket index, we need to define the bucket number.                           |
+| hoodie.bucket.index.hash.field          | false        |                       | If we use Bucket index, we need to define a field to determine hash index.             |
 
-## Hudi压缩
+## Hudi Compaction
 
-### 主要参数
+### Parameters
 
-Compaction参数包含了reader和writer部分。
+Compaction has well-defined reader and writer parameters
 
 ```json
 {
@@ -214,23 +214,22 @@ Compaction参数包含了reader和writer部分。
 }
 ```
 
-#### 必填参数
+#### Necessary parameters
 
-| Param name       | Required | Optional value | Description                                                                                |
-|:-----------------|:---------|:---------------|:-------------------------------------------------------------------------------------------|
-| job.reader.class | Yes      |                | Hudi压缩读取器类名, `com.bytedance.bitsail.connector.legacy.hudi.dag.HudiCompactSourceDAGBuilder` |
-| job.writer.class | Yes      |                | Hudi压缩写入器类名, `com.bytedance.bitsail.connector.legacy.hudi.dag.HudiCompactSinkDAGBuilder`   |
-| job.reader.path  | Yes      |                | 表的路径，可以是HDFS，S3，或者其他文件系统。                                                                  |
-| job.writer.path  | Yes      |                | 表的路径，可以是HDFS，S3，或者其他文件系统。                                                                  |
-
-
-#### 选填参数
-
-| Param name             | Required | Optional value | Description |
-|:-----------------------|:---------|:---------------|:------------|
-| writer_parallelism_num | No       |                | 执行压缩的并发度    |
+| Param name                   | Required | Optional value | Description                                                                                                              |
+|:-----------------------------|:---------|:---------------|:-------------------------------------------------------------------------------------------------------------------------|
+| job.reader.class             | Yes      |                | Hudi compaction read connector class name, `com.bytedance.bitsail.connector.legacy.hudi.dag.HudiCompactSourceDAGBuilder` |
+| job.writer.class             | Yes      |                | Hudi compaction writer connector class name, `com.bytedance.bitsail.connector.legacy.hudi.dag.HudiCompactSinkDAGBuilder` |
+| job.reader.path              | Yes      |                | the path of the table, could be HDFS, S3, or other file systems.                                                         |
+| job.writer.path              | Yes      |                | the path of the table, could be HDFS, S3, or other file systems.                                                         |
 
 
-## 相关文档
+#### Optional parameters
 
-配置示例文档: [hudi-connector-example](./hudi-example.md)
+| Param name             | Required | Optional value | Description                           |
+|:-----------------------|:---------|:---------------|:--------------------------------------|
+| writer_parallelism_num | No       |                | parallelism to process the compaction |
+
+## Related document
+
+Configuration examples: [hudi-connector-example](./hudi-example.md)
