@@ -2,37 +2,36 @@
 
 -----
 
-***BitSail*** 支持以下连接器用于不同数据源:
+***BitSail*** supports the following connectors for different data sources:
 
+- [Elasticsearch connector](docs/connectors/elasticsearch/elasticsearch.md)
 
-- [Elasticsearch连接器](docs/connectors/elasticsearch/elasticsearch.md)
+- [FTP/SFTP connector](docs/connectors/ftp/ftp.md)
 
-- [FTP/SFTP 连接器](docs/connectors/ftp/ftp.md)
+- [Hadoop connector](docs/connectors/hadoop/hadoop.md)
 
-- [Hadoop连接器](docs/connectors/hadoop/hadoop.md)
+- [Hive connector](docs/connectors/hive/hive.md)
 
-- [Hive连接器](docs/connectors/hive/hive.md)
+- [HBase connector](docs/connectors/hbase/hbase.md)
 
-- [HBase连接器](docs/connectors/hbase/hbase.md)
+- [Hudi connector](docs/connectors/hudi/hudi.md)
 
-- [Hudi连接器](docs/connectors/hudi/hudi.md)
+- [Kafka connector](docs/connectors/kafka/kafka.md)
 
-- [Kafka连接器](docs/connectors/kafka/kafka.md)
+- [RocketMQ connector](docs/connectors/rocketmq/rocketmq.md)
 
-- [RocketMQ连接器](docs/connectors/rocketmq/rocketmq.md)
+- [Redis connector](docs/connectors/redis/redis.md)
 
-- [Redis连接器](docs/connectors/redis/redis.md)
+- [MongoDB connector](docs/connectors/mongodb/mongodb.md)
 
-- [MongoDB连接器](docs/connectors/mongodb/mongodb.md)
+- [Doris connector](docs/connectors/doris/doris.md)
 
-- [Doris连接器](docs/connectors/doris/doris.md)
+- [StreamingFile connector (Hdfs streaming connector)](docs/connectors/StreamingFile/StreamingFile.md)
 
-- [StreamingFile连接器 (hdfs流式连接器)](docs/connectors/StreamingFile/StreamingFile.md)
+- [Jdbc connector](docs/connectors/Jdbc/jdbc.md)
 
-- [Jdbc连接器](docs/connectors/Jdbc/jdbc.md)
+- [LarkSheet_connector](docs/connectors/larksheet/larksheet.md)
 
-- [飞书表格连接器](docs/connectors/larksheet/larksheet.md)
+- [Kudu connector](docs/connectors/kudu/kudu.md)
 
-- [Kudu连接器](docs/connectors/kudu/kudu.md)
-
-- [Druid连接器](docs/connectors/druid/druid.md)
+- [Druid connector](docs/connectors/druid/druid.md)
