@@ -18,8 +18,8 @@ output
 .flattened-pom.xml
 */*.flattened-pom.xml
 node_modules/
-#**/.vuepress/.cache/
-#**/.vuepress/.temp/
-#**/.vuepress/dist/
+**/.vuepress/.cache/
+**/.vuepress/.temp/
+**/.vuepress/dist/
 yarn-error.log
 yarn.lock
