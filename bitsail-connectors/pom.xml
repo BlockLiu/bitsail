@@ -46,6 +46,7 @@
         <module>connector-druid</module>
         <module>connector-assert</module>
         <module>connector-selectdb</module>
+        <module>connector-larksheet</module>
     </modules>
 
     <dependencyManagement>
@@ -93,11 +94,6 @@
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-webapp</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-io</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
         </dependencies>
