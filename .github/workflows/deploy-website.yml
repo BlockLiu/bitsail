@@ -4,11 +4,7 @@ name: 部署文档
 on:
   push:
     branches:
-      - master
-    paths:
-      - 'website/**'
-      - 'package.json'
-      - 'yarn.lock'
+      - test-website
 
 jobs:
   deploy-gh-pages:
