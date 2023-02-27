@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Bytedance Ltd. and/or its affiliates.
+ * Copyright 2022-2023 Bytedance Ltd. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,10 +46,10 @@ public class NativeFlinkTypeInfoUtilTest {
         mapTypeInfo
     );
 
-    TypeInfo<?>[] typeInfos = NativeFlinkTypeInfoUtil.toTypeInfos(rowTypeInfo);
-    TypeInfo<?> bitsailLong = typeInfos[0];
-    TypeInfo<?> bitsailList = typeInfos[1];
-    TypeInfo<?> bitsailMap = typeInfos[2];
+    com.bytedance.bitsail.common.typeinfo.RowTypeInfo frameworkRowTypeInfo = NativeFlinkTypeInfoUtil.toRowTypeInfo(rowTypeInfo);
+    TypeInfo<?> bitsailLong = frameworkRowTypeInfo.getTypeInfos()[0];
+    TypeInfo<?> bitsailList = frameworkRowTypeInfo.getTypeInfos()[1];
+    TypeInfo<?> bitsailMap = frameworkRowTypeInfo.getTypeInfos()[2];
 
     Assert.assertTrue(bitsailLong instanceof BasicTypeInfo);
     Assert.assertSame(Long.class, bitsailLong.getTypeClass());
@@ -64,12 +64,14 @@ public class NativeFlinkTypeInfoUtilTest {
 
   @Test
   public void testGetRowTypeInformation() {
-    TypeInfo<?>[] typeInfos = {
-        new BasicTypeInfo<>(Long.class),
-        new ListTypeInfo<>(new BasicTypeInfo<>(String.class)),
-        new MapTypeInfo<>(new BasicTypeInfo<>(String.class), new BasicTypeInfo<>(Double.class))
-    };
-    RowTypeInfo rowTypeInformation = (RowTypeInfo) NativeFlinkTypeInfoUtil.getRowTypeInformation(typeInfos);
+    com.bytedance.bitsail.common.typeinfo.RowTypeInfo rowTypeInfo = new com.bytedance.bitsail.common.typeinfo.RowTypeInfo(
+        new String[] {"id", "labels", "properties"},
+        new TypeInfo<?>[] {
+            new BasicTypeInfo<>(Long.class),
+            new ListTypeInfo<>(new BasicTypeInfo<>(String.class)),
+            new MapTypeInfo<>(new BasicTypeInfo<>(String.class), new BasicTypeInfo<>(Double.class))
+        });
+    RowTypeInfo rowTypeInformation = (RowTypeInfo) NativeFlinkTypeInfoUtil.getRowTypeInformation(rowTypeInfo);
 
     TypeInformation<?> longTypeInfo = rowTypeInformation.getTypeAt(0);
     TypeInformation<?> listTypeInfo = rowTypeInformation.getTypeAt(1);

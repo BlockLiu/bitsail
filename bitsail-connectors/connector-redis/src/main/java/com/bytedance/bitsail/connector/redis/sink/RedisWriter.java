@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Bytedance Ltd. and/or its affiliates.
+ * Copyright 2022-2023 Bytedance Ltd. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ public class RedisWriter<CommitT> implements Writer<Row, CommitT, EmptyState> {
     // initialize command factory
     String redisDataType = StringUtils.upperCase(writerConfiguration.get(RedisWriterOptions.REDIS_DATA_TYPE));
     String additionalKey = writerConfiguration.getUnNecessaryOption(RedisWriterOptions.ADDITIONAL_KEY, "default_redis_key");
-    this.jedisCommand = initJedisCommand(redisDataType, ttlInSeconds, additionalKey, context.getTypeInfos());
+    this.jedisCommand = initJedisCommand(redisDataType, ttlInSeconds, additionalKey, context.getRowTypeInfo().getTypeInfos());
 
     // initialize jedis pool
     JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();

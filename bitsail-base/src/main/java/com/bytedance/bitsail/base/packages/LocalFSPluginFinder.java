@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Bytedance Ltd. and/or its affiliates.
+ * Copyright 2022-2023 Bytedance Ltd. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.bytedance.bitsail.common.BitSailException;
 import com.bytedance.bitsail.common.configuration.BitSailConfiguration;
 import com.bytedance.bitsail.common.option.CommonOptions;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -31,7 +32,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -44,7 +44,12 @@ public class LocalFSPluginFinder implements PluginFinder {
 
   @Override
   public void configure(BitSailConfiguration commonConfiguration) {
+    this.pluginStores = createPluginStores(commonConfiguration);
+    this.pluginClassloader = createPluginClassloader();
+  }
 
+  protected List<PluginStore> createPluginStores(BitSailConfiguration commonConfiguration) {
+    List<PluginStore> pluginStores = Lists.newArrayList();
     String frameworkBaseDir = commonConfiguration
         .getUnNecessaryOption(CommonOptions.JOB_PLUGIN_ROOT_PATH, getFrameworkEntryDir().toString());
 
@@ -53,7 +58,6 @@ public class LocalFSPluginFinder implements PluginFinder {
 
     Path frameworkBaseDirPath = Paths.get(frameworkBaseDir);
 
-    pluginStores = new ArrayList<>();
     pluginStores.add(PluginStore.builder()
         .pluginBaseDirPath(frameworkBaseDirPath.resolve(pluginDirName))
         .pluginMappingBaseDirPath(frameworkBaseDirPath.resolve(pluginMappingDirName))
@@ -67,7 +71,11 @@ public class LocalFSPluginFinder implements PluginFinder {
         .pluginMappingBaseDirPath(frameworkBaseDirPath.resolve(engineMappingDirName))
         .build());
 
-    this.pluginClassloader = URLClassLoader.newInstance(new URL[] {}, Thread.currentThread()
+    return pluginStores;
+  }
+
+  protected URLClassLoader createPluginClassloader() {
+    return URLClassLoader.newInstance(new URL[] {}, Thread.currentThread()
         .getContextClassLoader());
   }
 

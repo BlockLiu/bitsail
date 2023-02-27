@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Bytedance Ltd. and/or its affiliates.
+ * Copyright 2022-2023 Bytedance Ltd. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.bytedance.bitsail.base.version;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,19 @@ public class VersionHolder {
       }
     } catch (Exception e) {
       LOG.info("Cannot determine code revision: Unable to read version property file.", e);
+    }
+
+    // Obtain git version from package info
+    if (!isBuildVersionValid(gitBuildVersion)) {
+      try {
+        Package curPkg = VersionHolder.class.getPackage();
+        VersionInfoAnnotation annotation = curPkg.getAnnotation(VersionInfoAnnotation.class);
+        if (StringUtils.isNotEmpty(annotation.version())) {
+          gitBuildVersion = annotation.version();
+        }
+      } catch (Exception ignored) {
+        gitBuildVersion = UNKNOWN;
+      }
     }
   }
 
