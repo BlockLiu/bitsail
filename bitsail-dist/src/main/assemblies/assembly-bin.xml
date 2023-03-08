@@ -55,7 +55,6 @@
                 <exclude>com.bytedance.bitsail:bitsail-connector-messagequeue</exclude>
                 <exclude>com.bytedance.bitsail:bitsail-connector-streamingfile-common</exclude>
                 <exclude>com.bytedance.bitsail:connector-base</exclude>
-                <exclude>com.bytedance.bitsail:bitsail-connector-test</exclude>
             </excludes>
             <outputFileNameMapping>${artifact.file.name}</outputFileNameMapping>
         </dependencySet>
@@ -85,7 +84,7 @@
             <directory>src/main/resources</directory>
             <fileMode>755</fileMode>
             <includes>
-                <include>*</include>
+                <include>**</include>
             </includes>
             <outputDirectory>/</outputDirectory>
         </fileSet>
