@@ -46,14 +46,14 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
-            <version>${mongo.version}</version>
+            <version>${mongodb.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>${mongo.version}</version>
+            <version>${mongodb.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
