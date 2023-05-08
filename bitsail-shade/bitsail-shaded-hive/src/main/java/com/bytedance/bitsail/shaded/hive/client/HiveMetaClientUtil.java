@@ -22,6 +22,7 @@ import com.bytedance.bitsail.common.exception.CommonErrorCode;
 import com.bytedance.bitsail.common.model.ColumnInfo;
 import com.bytedance.bitsail.common.util.Pair;
 import com.bytedance.bitsail.common.util.timelimit.FixedAttemptTimeLimit;
+import com.bytedance.bitsail.component.format.security.kerberos.security.HadoopSecurityModule;
 
 import com.bytedance.bitsail.shaded.hive.shim.HiveShim;
 import com.bytedance.bitsail.shaded.hive.shim.HiveShimLoader;
@@ -34,6 +35,7 @@ import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import com.google.common.base.Strings;
+import lombok.Setter;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.IMetaStoreClient;
 import org.apache.hadoop.hive.metastore.api.AlreadyExistsException;
@@ -79,6 +81,9 @@ public class HiveMetaClientUtil {
       .withStopStrategy(StopStrategies.stopAfterAttempt(Constants.RETRY_TIMES))
       .build();
   private static HiveShim hiveShim = null;
+
+  @Setter
+  private static HadoopSecurityModule securityModule = new HadoopSecurityModule();
 
   public static synchronized void init() {
     if (hiveShim == null) {
@@ -483,6 +488,13 @@ public class HiveMetaClientUtil {
     try {
       if (hiveShim == null) {
         init();
+      }
+      if (securityModule != null) {
+        return securityModule.doAs(() -> {
+          IMetaStoreClient client = hiveShim.getHiveMetastoreClient(hiveConf);
+          LOG.info("Successfully get metastore client");
+          return client;
+        });
       }
       return hiveShim.getHiveMetastoreClient(hiveConf);
     } catch (Exception e) {

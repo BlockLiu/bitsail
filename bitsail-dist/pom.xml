@@ -50,61 +50,61 @@
         </dependency>
 
         <!-- connectors  -->
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>bitsail-connector-streamingfile-core</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>bitsail-connector-streamingfile-core</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>bitsail-connector-hudi</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>bitsail-connector-hudi</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>bitsail-connector-jdbc</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>bitsail-connector-jdbc</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>bitsail-connector-fake</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>bitsail-connector-fake</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-fake</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-fake</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>bitsail-connector-hadoop</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>bitsail-connector-hadoop</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>bitsail-connector-larksheet</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>bitsail-connector-larksheet</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>bitsail-connector-hbase</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>bitsail-connector-hbase</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>com.bytedance.bitsail</groupId>
@@ -113,26 +113,26 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>bitsail-connector-kafka</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>bitsail-connector-kafka</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>bitsail-connector-rocketmq</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>bitsail-connector-rocketmq</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>bitsail-connector-mongodb</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>bitsail-connector-mongodb</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>com.bytedance.bitsail</groupId>
@@ -141,131 +141,131 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>bitsail-connector-redis</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>bitsail-connector-redis</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-print</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-print</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-elasticsearch</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-elasticsearch</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-doris</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-doris</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-druid</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-druid</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-kudu</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-kudu</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-clickhouse</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-clickhouse</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>bitsail-connector-ftp</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>bitsail-connector-ftp</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-rocketmq</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-rocketmq</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-redis</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-redis</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-ftp</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-ftp</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-assert</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-assert</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-selectdb</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-selectdb</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-localfilesystem</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-localfilesystem</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-larksheet</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-larksheet</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-kafka</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-kafka</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-cdc-mysql</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-cdc-mysql</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.bytedance.bitsail</groupId>
-            <artifactId>connector-mongodb</artifactId>
-            <version>${revision}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.bytedance.bitsail</groupId>-->
+<!--            <artifactId>connector-mongodb</artifactId>-->
+<!--            <version>${revision}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
