@@ -387,4 +387,8 @@ public abstract class InputFormatPlugin<OT extends Row, T extends InputSplit> ex
   public void setDirtyCollector(AbstractDirtyCollector dirtyCollector) {
     this.dirtyCollector = dirtyCollector;
   }
+
+  public void beforeDeploy() {
+
+  }
 }

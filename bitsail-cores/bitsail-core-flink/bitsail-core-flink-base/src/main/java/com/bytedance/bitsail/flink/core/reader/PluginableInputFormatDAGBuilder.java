@@ -82,6 +82,7 @@ public class PluginableInputFormatDAGBuilder<T extends Row, Split extends InputS
   @SuppressWarnings("unchecked")
   public DataStream<T> addSource(FlinkExecutionEnviron executionEnviron,
                                  int readerParallelism) throws Exception {
+    inputFormatPlugin.beforeDeploy();
 
     TypeInformation<T> sourceRowTypeInfo = TypeExtractor.<T>getInputFormatTypes(inputFormatPlugin);
     InputFormatSourceFunction<T> formatSourceFunction = new InputFormatSourceFunction<>(inputFormatPlugin,

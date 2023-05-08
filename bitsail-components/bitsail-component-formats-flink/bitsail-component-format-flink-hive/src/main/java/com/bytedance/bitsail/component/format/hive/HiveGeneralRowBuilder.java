@@ -29,6 +29,7 @@ import com.bytedance.bitsail.common.column.MapColumn;
 import com.bytedance.bitsail.common.column.StringColumn;
 import com.bytedance.bitsail.common.exception.CommonErrorCode;
 import com.bytedance.bitsail.component.format.api.RowBuilder;
+import com.bytedance.bitsail.component.format.security.kerberos.security.HadoopSecurityModule;
 import com.bytedance.bitsail.flink.core.typeinfo.ListColumnTypeInfo;
 import com.bytedance.bitsail.flink.core.typeinfo.MapColumnTypeInfo;
 
@@ -37,6 +38,7 @@ import com.bytedance.bitsail.shaded.hive.shim.HiveShim;
 import com.bytedance.bitsail.shaded.hive.shim.HiveShimLoader;
 
 import com.google.common.annotations.VisibleForTesting;
+import lombok.Setter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.typeutils.RowTypeInfo;
@@ -81,6 +83,12 @@ public class HiveGeneralRowBuilder implements RowBuilder<Writable> {
   private transient StructObjectInspector structObjectInspector = null;
   private transient Deserializer deserializer = null;
 
+  @Setter
+  private HadoopSecurityModule securityModule = new HadoopSecurityModule();
+
+  @Setter
+  private HiveConf hiveConf;
+
   public HiveGeneralRowBuilder(Map<String, Integer> columnMapping,
                                String database,
                                String table,
@@ -109,11 +117,11 @@ public class HiveGeneralRowBuilder implements RowBuilder<Writable> {
         if (deserializer == null) {
           try {
             HiveMetaClientUtil.init();
-            HiveConf hiveConf = HiveMetaClientUtil.getHiveConf(hiveProperties);
-            StorageDescriptor storageDescriptor = HiveMetaClientUtil.getTableFormat(hiveConf, db, table);
+            HiveConf localHiveConf = this.hiveConf == null ? HiveMetaClientUtil.getHiveConf(hiveProperties) : this.hiveConf;
+            StorageDescriptor storageDescriptor = securityModule.doAs(() -> HiveMetaClientUtil.getTableFormat(localHiveConf, db, table));
             deserializer = (Deserializer) Class.forName(storageDescriptor.getSerdeInfo().getSerializationLib()).newInstance();
             Configuration conf = new Configuration();
-            Properties properties = HiveMetaClientUtil.getHiveTableMetadata(hiveConf, db, table);
+            Properties properties = securityModule.doAs(() -> HiveMetaClientUtil.getHiveTableMetadata(localHiveConf, db, table));
             SerDeUtils.initializeSerDe(deserializer, conf, properties, null);
             structObjectInspector = (StructObjectInspector) deserializer.getObjectInspector();
             structFields = structObjectInspector.getAllStructFieldRefs();

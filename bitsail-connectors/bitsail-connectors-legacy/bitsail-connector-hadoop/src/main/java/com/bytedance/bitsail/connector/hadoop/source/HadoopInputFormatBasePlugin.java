@@ -17,9 +17,11 @@
 package com.bytedance.bitsail.connector.hadoop.source;
 
 import com.bytedance.bitsail.common.util.JsonSerializer;
+import com.bytedance.bitsail.component.format.security.kerberos.security.HadoopSecurityModule;
 import com.bytedance.bitsail.connector.hadoop.option.HadoopReaderOptions;
 import com.bytedance.bitsail.connector.hadoop.split.OptimizedHadoopInputSplit;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.flink.api.common.io.FileInputFormat.FileBaseStatistics;
@@ -86,9 +88,12 @@ public abstract class HadoopInputFormatBasePlugin<K, V, T extends Row> extends
 
   private transient InputSplit inputSplit;
 
+  protected HadoopSecurityModule securityModule;
+
   public HadoopInputFormatBasePlugin(JobConf job) {
     super(job.getCredentials());
     jobConf = job;
+    securityModule = new HadoopSecurityModule();
   }
 
   public HadoopInputFormatBasePlugin(org.apache.hadoop.mapred.InputFormat<K, V> mapredInputFormat, Class<K> key, Class<V> value, JobConf job) {
@@ -97,6 +102,7 @@ public abstract class HadoopInputFormatBasePlugin<K, V, T extends Row> extends
     HadoopUtils.mergeHadoopConf(job);
     this.jobConf = job;
     ReflectionUtils.setConf(mapredInputFormat, jobConf);
+    securityModule = new HadoopSecurityModule();
   }
 
   public JobConf getJobConf() {
@@ -107,10 +113,17 @@ public abstract class HadoopInputFormatBasePlugin<K, V, T extends Row> extends
   //  InputFormat
   // --------------------------------------------------------------------------------------------
 
+  @SneakyThrows
   @Override
   public void configure(Configuration parameters) {
     super.configure(parameters);
     // enforce sequential configuration() calls
+
+    Credentials currentUserCreds = securityModule.doAs(() -> getCredentialsFromUGI(UserGroupInformation.getCurrentUser()));
+    if (currentUserCreds != null) {
+      jobConf.getCredentials().addAll(currentUserCreds);
+    }
+
     synchronized (CONFIGURE_MUTEX) {
       // configure MR InputFormat if necessary
       if (this.mapredInputFormat instanceof Configurable) {
@@ -121,52 +134,61 @@ public abstract class HadoopInputFormatBasePlugin<K, V, T extends Row> extends
     }
   }
 
+  @SneakyThrows
   @Override
   public BaseStatistics getStatistics(BaseStatistics cachedStats) {
-    if (this.cachedStatistics != null) {
-      return cachedStatistics;
-    }
+    return securityModule.doAs(() -> {
+      if (this.cachedStatistics != null) {
+        return cachedStatistics;
+      }
 
-    // only gather base statistics for FileInputFormats
-    if (!(mapredInputFormat instanceof FileInputFormat)) {
+      // only gather base statistics for FileInputFormats
+      if (!(mapredInputFormat instanceof FileInputFormat)) {
+        return null;
+      }
+
+      final FileBaseStatistics cachedFileStats = (cachedStats instanceof FileBaseStatistics) ?
+          (FileBaseStatistics) cachedStats : null;
+
+      try {
+        final org.apache.hadoop.fs.Path[] paths = FileInputFormat.getInputPaths(this.jobConf);
+
+        org.apache.hadoop.fs.Path[] actualHadoopPaths = getHadoopParsedPaths(paths).toArray(new org.apache.hadoop.fs.Path[0]);
+
+        this.cachedStatistics = getFileStats(cachedFileStats, actualHadoopPaths, new ArrayList<>(1));
+        return this.cachedStatistics;
+      } catch (IOException ioex) {
+        if (log.isWarnEnabled()) {
+          log.warn("Could not determine statistics due to an io error: "
+              + ioex.getMessage());
+        }
+      } catch (Throwable t) {
+        if (log.isErrorEnabled()) {
+          log.error("Unexpected problem while getting the file statistics: "
+              + t.getMessage(), t);
+        }
+      }
+
+      // no statistics available
       return null;
-    }
-
-    final FileBaseStatistics cachedFileStats = (cachedStats instanceof FileBaseStatistics) ?
-        (FileBaseStatistics) cachedStats : null;
-
-    try {
-      final org.apache.hadoop.fs.Path[] paths = FileInputFormat.getInputPaths(this.jobConf);
-
-      org.apache.hadoop.fs.Path[] actualHadoopPaths = getHadoopParsedPaths(paths).toArray(new org.apache.hadoop.fs.Path[0]);
-
-      this.cachedStatistics = getFileStats(cachedFileStats, actualHadoopPaths, new ArrayList<>(1));
-      return this.cachedStatistics;
-    } catch (IOException ioex) {
-      if (log.isWarnEnabled()) {
-        log.warn("Could not determine statistics due to an io error: "
-            + ioex.getMessage());
-      }
-    } catch (Throwable t) {
-      if (log.isErrorEnabled()) {
-        log.error("Unexpected problem while getting the file statistics: "
-            + t.getMessage(), t);
-      }
-    }
-
-    // no statistics available
-    return null;
+    });
   }
 
   @Override
   public OptimizedHadoopInputSplit[] createSplits(int minNumSplits)
       throws IOException {
-    org.apache.hadoop.mapred.InputSplit[] splitArray = mapredInputFormat.getSplits(jobConf, minNumSplits);
-    OptimizedHadoopInputSplit[] hiSplit = new OptimizedHadoopInputSplit[splitArray.length];
-    for (int i = 0; i < splitArray.length; i++) {
-      hiSplit[i] = new OptimizedHadoopInputSplit(i, splitArray[i]);
+    try {
+      return securityModule.doAs(() -> {
+        org.apache.hadoop.mapred.InputSplit[] splitArray = mapredInputFormat.getSplits(jobConf, minNumSplits);
+        OptimizedHadoopInputSplit[] hiSplit = new OptimizedHadoopInputSplit[splitArray.length];
+        for (int i = 0; i < splitArray.length; i++) {
+          hiSplit[i] = new OptimizedHadoopInputSplit(i, splitArray[i]);
+        }
+        return hiSplit;
+      });
+    } catch (Exception e) {
+      throw new IOException("Failed to create splits.", e);
     }
-    return hiSplit;
   }
 
   @Override
@@ -175,14 +197,18 @@ public abstract class HadoopInputFormatBasePlugin<K, V, T extends Row> extends
     return new LocatableInputSplitAssigner(inputSplits);
   }
 
+  @SneakyThrows
   @Override
   public void open(OptimizedHadoopInputSplit split) throws IOException {
+    securityModule.login();
+
     split.initInputSplit(jobConf);
 
     // enforce sequential open() calls
     synchronized (OPEN_MUTEX) {
 
-      this.recordReader = this.mapredInputFormat.getRecordReader(split.getHadoopInputSplit(), jobConf, new HadoopDummyReporter());
+      this.recordReader = securityModule.doAs(() ->
+          this.mapredInputFormat.getRecordReader(split.getHadoopInputSplit(), jobConf, new HadoopDummyReporter()));
       this.inputSplit = split.getHadoopInputSplit();
       if (this.recordReader instanceof Configurable) {
         ((Configurable) this.recordReader).setConf(jobConf);
@@ -218,7 +244,7 @@ public abstract class HadoopInputFormatBasePlugin<K, V, T extends Row> extends
   @Override
   public boolean isSplitEnd() throws IOException {
     try {
-      hasNext = this.recordReader.next(key, value);
+      hasNext = securityModule.doAsWithoutLogin(() -> this.recordReader.next(key, value));
       return !hasNext;
     } catch (Exception e) {
       throw new RuntimeException("Error while processing input split: " + inputSplit, e);
@@ -234,6 +260,8 @@ public abstract class HadoopInputFormatBasePlugin<K, V, T extends Row> extends
         this.recordReader.close();
       }
     }
+
+    securityModule.logout();
   }
 
   // --------------------------------------------------------------------------------------------
@@ -390,4 +418,8 @@ public abstract class HadoopInputFormatBasePlugin<K, V, T extends Row> extends
     this.hasNext = hasNext;
   }
 
+  @Override
+  public void beforeDeploy() {
+    securityModule.logout();
+  }
 }

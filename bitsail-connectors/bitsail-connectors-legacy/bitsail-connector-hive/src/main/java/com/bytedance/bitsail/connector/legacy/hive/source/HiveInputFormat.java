@@ -28,6 +28,7 @@ import com.bytedance.bitsail.common.util.JsonSerializer;
 import com.bytedance.bitsail.common.util.Pair;
 import com.bytedance.bitsail.component.format.api.RowBuilder;
 import com.bytedance.bitsail.component.format.hive.HiveGeneralRowBuilder;
+import com.bytedance.bitsail.component.format.security.kerberos.security.HadoopSecurityModule;
 import com.bytedance.bitsail.connector.hadoop.source.HadoopInputFormatBasePlugin;
 import com.bytedance.bitsail.connector.legacy.hive.option.HiveReaderOptions;
 import com.bytedance.bitsail.flink.core.typeutils.ColumnFlinkTypeInfoUtil;
@@ -38,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.typeutils.ResultTypeQueryable;
 import org.apache.flink.api.java.typeutils.RowTypeInfo;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.types.Row;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.api.StorageDescriptor;
@@ -83,9 +85,16 @@ public class HiveInputFormat extends HadoopInputFormatBasePlugin<Void, ArrayWrit
 
   @Override
   public Row buildRow(Row reuse, String mandatoryEncoding) throws BitSailException {
+    log.info("Found value: {}", value.toString());
     rowBuilder.build(value, reuse, rowTypeInfo);
 
     return reuse;
+  }
+
+  @Override
+  public void configure(Configuration parameters) {
+    initSecurityModule();
+    super.configure(parameters);
   }
 
   @Override
@@ -95,6 +104,9 @@ public class HiveInputFormat extends HadoopInputFormatBasePlugin<Void, ArrayWrit
     this.table = inputSliceConfig.getNecessaryOption(HiveReaderOptions.TABLE_NAME, FrameworkErrorCode.REQUIRED_VALUE);
     this.partition = inputSliceConfig.get(HiveReaderOptions.PARTITION);
     log.info("Init finished. DB: {}, table: {}, partition: {}", db, table, partition);
+
+    initSecurityModule();
+    securityModule.login();
 
     HiveConf hiveConf = getHiveConf(inputSliceConfig);
     // construct row type info
@@ -110,12 +122,13 @@ public class HiveInputFormat extends HadoopInputFormatBasePlugin<Void, ArrayWrit
     LOG.info("Row Type Info: " + rowTypeInfo);
 
     // initialize mapred input format
-    super.mapredInputFormat = getMapredInputFormat(commonConfig, inputSliceConfig);
+    super.mapredInputFormat = securityModule.doAs(() -> getMapredInputFormat(commonConfig, inputSliceConfig));
 
     this.rowBuilder = new HiveGeneralRowBuilder(getMappingFromMetastore(hiveConf, inputSliceConfig),
         db,
         table,
         JsonSerializer.parseToMap(inputSliceConfig.get(HiveReaderOptions.HIVE_METASTORE_PROPERTIES)));
+    ((HiveGeneralRowBuilder) rowBuilder).setSecurityModule(securityModule);
 
     setMapredInputJobConf();
 
@@ -160,5 +173,20 @@ public class HiveInputFormat extends HadoopInputFormatBasePlugin<Void, ArrayWrit
     Map<String, String> hiveProperties =
         JsonSerializer.parseToMap(readerConfiguration.getNecessaryOption(HiveReaderOptions.HIVE_METASTORE_PROPERTIES, CommonErrorCode.CONFIG_ERROR));
     return HiveMetaClientUtil.getHiveConf(hiveProperties);
+  }
+
+  private void initSecurityModule() {
+    if (securityModule == null) {
+      securityModule = new HadoopSecurityModule();
+    }
+
+    if (inputSliceConfig.get(HiveReaderOptions.KERBEROS_ENABLE)) {
+      securityModule.initializeModule(
+          inputSliceConfig.get(HiveReaderOptions.KERBEROS_PRINCIPAL),
+          inputSliceConfig.get(HiveReaderOptions.KERBEROS_KEYTAB_PATH),
+          inputSliceConfig.get(HiveReaderOptions.KERBEROS_KRB5_CONF_PATH),
+          inputSliceConfig.getUnNecessaryOption(HiveReaderOptions.KERBEROS_KRB5_USE_SUBJECT_CREDITS_ONLY, null)
+      );
+    }
   }
 }

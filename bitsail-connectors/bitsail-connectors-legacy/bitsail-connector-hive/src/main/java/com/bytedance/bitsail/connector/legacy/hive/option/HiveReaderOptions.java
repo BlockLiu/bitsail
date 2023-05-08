@@ -34,4 +34,24 @@ public interface HiveReaderOptions extends ReaderOptions.BaseReaderOptions {
   ConfigOption<String> HIVE_METASTORE_PROPERTIES =
       key(READER_PREFIX + "metastore_properties")
           .noDefaultValue(String.class);
+
+  ConfigOption<Boolean> KERBEROS_ENABLE =
+      key(READER_PREFIX + "enable")
+          .defaultValue(false);
+
+  ConfigOption<String> KERBEROS_KEYTAB_PATH =
+      key(READER_PREFIX + "keytab_path")
+          .noDefaultValue(String.class);
+
+  ConfigOption<String> KERBEROS_PRINCIPAL =
+      key(READER_PREFIX + "principal")
+          .noDefaultValue(String.class);
+
+  ConfigOption<String> KERBEROS_KRB5_CONF_PATH =
+      key(READER_PREFIX + "krb5_conf_path")
+          .noDefaultValue(String.class);
+
+  ConfigOption<Boolean> KERBEROS_KRB5_USE_SUBJECT_CREDITS_ONLY =
+      key(READER_PREFIX + "use_subject_credits_only")
+          .noDefaultValue(Boolean.class);
 }

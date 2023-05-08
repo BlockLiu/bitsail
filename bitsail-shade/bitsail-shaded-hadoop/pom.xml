@@ -29,7 +29,7 @@
 
     <properties>
         <guava.version>11.0.2</guava.version>
-        <hadoop.version>3.1.1</hadoop.version>
+        <hadoop.version>2.7.2</hadoop.version>
     </properties>
 
     <dependencyManagement>
@@ -47,6 +47,20 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>
             <version>${hadoop.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>netty</artifactId>
+                    <groupId>io.netty</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
